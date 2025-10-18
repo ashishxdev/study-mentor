@@ -921,7 +921,7 @@ const NoteEditorPage = ({ note, onExit }) => {
 
     const [summary, setSummary] = useState(null);
     const [isSummarizing, setIsSummarizing] = useState(false);
-    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    const API_KEY = null; // Disabled for security - Gemini API key should not be exposed publicly
 
     useEffect(() => {
         if (content === currentNoteData.content && title === currentNoteData.title) { setStatus('Saved'); return; }
@@ -1426,7 +1426,7 @@ const AIAssistantPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const chatEndRef = useRef(null);
 
-    const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+    const API_KEY = null; // Disabled for security - Gemini API key should not be exposed publicly
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1547,7 +1547,7 @@ const AIAssistantPage = () => {
                                 Send
                             </button>
                         </div>
-                        {!API_KEY && <p className="text-xs text-red-300 mt-2">API Key not configured. Please set VITE_GEMINI_API_KEY in your .env file and restart the server.</p>}
+                        {!API_KEY && <p className="text-xs text-amber-300 mt-2">AI Assistant is disabled for security. The Gemini API key should not be exposed publicly in production.</p>}
                     </form>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4 sm:px-0">
