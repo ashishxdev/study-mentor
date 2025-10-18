@@ -4,12 +4,15 @@ import { supabase } from './supabaseClient';
 export async function signUpWithEmail({ email, password, name }) {
     console.log('🔧 signUpWithEmail called with:', { email, name: name ? 'provided' : 'not provided' });
     
+    // Get the current domain for email redirect
+    const currentDomain = window.location.origin;
+    
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { 
             data: { name },
-            emailRedirectTo: undefined
+            emailRedirectTo: `${currentDomain}/auth/callback`
         },
     });
     
