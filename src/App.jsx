@@ -197,8 +197,8 @@ const LandingPage = ({ onLogin }) => {
             {/* Navbar */}
             <nav className="relative z-10 px-4 sm:px-6 lg:px-12 py-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
                 <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg">A</div>
-                    <span className="text-xl font-bold hidden sm:inline">StudyHub</span>
+                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg">S</div>
+                    <span className="text-xl font-bold hidden sm:inline">StudyMentor</span>
                 </div>
                 <button
                     onClick={() => setShowAuth(true)}
@@ -242,16 +242,16 @@ const LandingPage = ({ onLogin }) => {
                     {/* Stats */}
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-8 mt-12 sm:mt-20 max-w-3xl mx-auto px-4">
                         <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">10K+</div>
-                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Active Students</div>
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">25min</div>
+                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Avg Focus Time</div>
                         </div>
                         <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">500K+</div>
-                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Study Sessions</div>
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">3.5x</div>
+                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Retention Boost</div>
                         </div>
                         <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10 col-span-2 sm:col-span-1">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400">98%</div>
-                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Satisfaction Rate</div>
+                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400">85%</div>
+                            <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Goal Completion</div>
                         </div>
                     </div>
                 </div>
@@ -1907,6 +1907,22 @@ const Dashboard = ({ onSignOut }) => {
 export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoadingData, setIsLoadingData] = useState(false);
+
+    // Handle auth callback for email verification
+    useEffect(() => {
+        const handleAuthCallback = async () => {
+            const { data, error } = await supabase.auth.getSession();
+            if (data.session) {
+                console.log('✅ Email verification successful');
+                // The session will be handled by the main auth listener below
+            }
+        };
+        
+        // Check if we're on the auth callback route
+        if (window.location.pathname === '/auth/callback') {
+            handleAuthCallback();
+        }
+    }, []);
 
     useEffect(() => {
         const sub = onAuthChange(async (user) => {

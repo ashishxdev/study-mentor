@@ -7,12 +7,17 @@ export async function signUpWithEmail({ email, password, name }) {
     // Get the current domain for email redirect
     const currentDomain = window.location.origin;
     
+    // For production, use your Vercel URL directly
+    const redirectUrl = currentDomain.includes('localhost') 
+        ? `${currentDomain}/auth/callback`
+        : `https://testing-six-topaz-75.vercel.app/auth/callback`;
+    
     const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: { 
             data: { name },
-            emailRedirectTo: `${currentDomain}/auth/callback`
+            emailRedirectTo: redirectUrl
         },
     });
     
