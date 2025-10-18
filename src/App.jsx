@@ -412,6 +412,10 @@ const addActivity = async (type) => {
     }
     mockFirestore.activities[today].total++;
     saveToStorage();
+    
+    // Trigger stats refresh for all HomePage components
+    window.dispatchEvent(new CustomEvent('activityUpdated'));
+    
     try {
         const user = await getCurrentUser();
         if (user) {
@@ -716,6 +720,7 @@ const FocusList = () => {
         saveToStorage();
         setNewTaskText('');
         try { const user = await getCurrentUser(); if (user) await upsertTask(user.id, newTask); } catch {}
+        addActivity('notes'); // Track task creation activity
     };
 
     const toggleTask = async (taskId) => {
@@ -835,7 +840,15 @@ const HomePage = () => {
     useEffect(() => {
         refreshData();
         const interval = setInterval(refreshData, 60000);
-        return () => clearInterval(interval);
+        
+        // Listen for activity updates
+        const handleActivityUpdate = () => refreshData();
+        window.addEventListener('activityUpdated', handleActivityUpdate);
+        
+        return () => {
+            clearInterval(interval);
+            window.removeEventListener('activityUpdated', handleActivityUpdate);
+        };
     }, []);
 
     const streakIcon = <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L13.09 8.26L22 9L17.5 13.74L18.18 22.5L12 19.77L5.82 22.5L6.5 13.74L2 9L10.91 8.26L12 2Z"/></svg>;
@@ -1070,6 +1083,7 @@ const NotesPage = ({ onSelectNote }) => {
 
         onSelectNote(newNote); 
         try { const user = await getCurrentUser(); if (user) await upsertNote(user.id, newNote); } catch {}
+        addActivity('notes'); // Track note creation activity
     };
 
     const handleDeleteNote = async (e, noteId) => {
@@ -1603,9 +1617,39 @@ const FlashcardsPage = () => {
         return () => { clearInterval(interval); window.removeEventListener('focus', checkStorage); };
     }, [decks, selectedDeck]);
 
-    const createDeck = async (e) => { e.preventDefault(); if (!newDeckName.trim()) return; const newDeck = { id: crypto.randomUUID(), name: newDeckName.trim(), cards: [], created_at: new Date().toISOString() }; const updatedDecks = [newDeck, ...decks]; mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); setNewDeckName(''); try { const user = await getCurrentUser(); if (user) await upsertDeck(user.id, newDeck); } catch {} };
+    const createDeck = async (e) => { 
+        e.preventDefault(); 
+        if (!newDeckName.trim()) return; 
+        const newDeck = { id: crypto.randomUUID(), name: newDeckName.trim(), cards: [], created_at: new Date().toISOString() }; 
+        const updatedDecks = [newDeck, ...decks]; 
+        mockFirestore.decks = updatedDecks; 
+        saveToStorage(); 
+        setDecks(updatedDecks); 
+        setNewDeckName(''); 
+        try { const user = await getCurrentUser(); if (user) await upsertDeck(user.id, newDeck); } catch {} 
+        addActivity('notes'); // Track deck creation activity
+    };
     const deleteDeck = async (deckId) => { if (window.confirm("Delete this deck and all its cards?")) { const updatedDecks = decks.filter(deck => deck.id !== deckId); mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); if (selectedDeck?.id === deckId) { setSelectedDeck(null); setViewMode('decks'); } try { const user = await getCurrentUser(); if (user) await deleteDeckRow(user.id, deckId); } catch {} } };
-    const addCard = async (e) => { e.preventDefault(); if (!selectedDeck || !cardFront.trim() || !cardBack.trim()) return; const newCard = { id: crypto.randomUUID(), front: cardFront.trim(), back: cardBack.trim(), created_at: new Date().toISOString() }; const updatedDecks = decks.map(deck => { if (deck.id === selectedDeck.id) { const existingCards = deck.cards || []; return { ...deck, cards: [newCard, ...existingCards] }; } return deck; }); mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); setSelectedDeck(updatedDecks.find(d => d.id === selectedDeck.id)); setCardFront(''); setCardBack(''); try { const user = await getCurrentUser(); if (user) await upsertCard(user.id, { id: newCard.id, deckId: selectedDeck.id, front: newCard.front, back: newCard.back, created_at: newCard.created_at }); } catch {} };
+    const addCard = async (e) => { 
+        e.preventDefault(); 
+        if (!selectedDeck || !cardFront.trim() || !cardBack.trim()) return; 
+        const newCard = { id: crypto.randomUUID(), front: cardFront.trim(), back: cardBack.trim(), created_at: new Date().toISOString() }; 
+        const updatedDecks = decks.map(deck => { 
+            if (deck.id === selectedDeck.id) { 
+                const existingCards = deck.cards || []; 
+                return { ...deck, cards: [newCard, ...existingCards] }; 
+            } 
+            return deck; 
+        }); 
+        mockFirestore.decks = updatedDecks; 
+        saveToStorage(); 
+        setDecks(updatedDecks); 
+        setSelectedDeck(updatedDecks.find(d => d.id === selectedDeck.id)); 
+        setCardFront(''); 
+        setCardBack(''); 
+        try { const user = await getCurrentUser(); if (user) await upsertCard(user.id, { id: newCard.id, deckId: selectedDeck.id, front: newCard.front, back: newCard.back, created_at: newCard.created_at }); } catch {} 
+        addActivity('notes'); // Track card creation activity
+    };
     const deleteCard = async (cardId) => { if (!selectedDeck) return; if (window.confirm("Delete this card?")) { const updatedDecks = decks.map(deck => { if (deck.id === selectedDeck.id) { const updatedCards = (deck.cards || []).filter(card => card.id !== cardId); return { ...deck, cards: updatedCards }; } return deck; }); mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); setSelectedDeck(updatedDecks.find(d => d.id === selectedDeck.id)); try { const user = await getCurrentUser(); if (user) await deleteCardRow(user.id, cardId); } catch {} } };
 
     const handleStartStudy = (deck) => {
@@ -1728,7 +1772,7 @@ const FlashcardsPage = () => {
                         <CheckIcon className="w-5 h-5 mr-2"/> {"I Knew It"}
                     </button>
                     {studySession.currentIndex === (studySession.cards.length - 1) && (
-                        <button onClick={() => setIsCompleted(true)} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-400/50 transition shadow">
+                        <button onClick={() => { setIsCompleted(true); addActivity('notes'); }} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-400/50 transition shadow">
                             Finish Session
                         </button>
                     )}
