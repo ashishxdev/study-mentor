@@ -33,7 +33,6 @@ const IconBase = ({ children, className = "w-6 h-6", ...props }) => (
 const AlignLeftIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" /></IconBase>;
 const CheckIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" /></IconBase>;
 const XIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></IconBase>;
-const LayersIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0l-3.75 3.75M12 9.75l3.75 3.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></IconBase>;
 const RotateCwIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-6 6m0 0l-6-6m6 6V9a6 6 0 0112 0v3" /></IconBase>;
 const FlashcardIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></IconBase>;
 const HomeIcon = () => <IconBase><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></IconBase>;
@@ -189,88 +188,95 @@ const LandingPage = ({ onLogin }) => {
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white relative overflow-hidden">
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-20 left-10 w-72 h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                <div className="absolute top-40 right-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-                <div className="absolute -bottom-20 left-1/3 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+                <div className="absolute top-10 sm:top-20 left-2 sm:left-10 w-48 h-48 sm:w-72 sm:h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+                <div className="absolute top-20 sm:top-40 right-2 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+                <div className="absolute -bottom-10 sm:-bottom-20 left-1/4 sm:left-1/3 w-48 h-48 sm:w-72 sm:h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
             </div>
 
             {/* Navbar */}
-            <nav className="relative z-10 px-4 sm:px-6 lg:px-12 py-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
+            <nav className="relative z-10 px-3 sm:px-6 lg:px-12 py-4 sm:py-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
                 <div className="flex items-center space-x-2">
-                    <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-xl shadow-lg">S</div>
-                    <span className="text-xl font-bold hidden sm:inline">StudyMentor</span>
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                        <img 
+                            src="https://img.freepik.com/premium-vector/light-bulb-with-brain-icon-vector-illustration-education-learning-concept_1185634-4382.jpg" 
+                            alt="StudyMentor Logo" 
+                            className="w-full h-full object-cover rounded-xl"
+                        />
+                    </div>
+                    <span className="text-lg sm:text-xl font-bold hidden xs:inline">StudyMentor</span>
                 </div>
                 <button
                     onClick={() => setShowAuth(true)}
-                    className="bg-white/10 backdrop-blur-md text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-white/20 transition-all border border-white/20 font-medium text-sm sm:text-base"
+                    className="bg-white/10 backdrop-blur-md text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-white/20 transition-all border border-white/20 font-medium text-xs sm:text-sm md:text-base"
                 >
-                    Get Started
+                    <span className="hidden xs:inline">Get Started</span>
+                    <span className="xs:hidden">Start</span>
                 </button>
             </nav>
 
             {/* Hero Section */}
-            <main className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-20 lg:py-32">
-                <div className="text-center max-w-5xl mx-auto">
-                    <div className="inline-block mb-4 sm:mb-6 px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
+            <main className="relative z-10 container mx-auto px-3 sm:px-6 lg:px-12 py-8 sm:py-12 md:py-20 lg:py-32">
+                <div className="text-center max-w-6xl mx-auto">
+                    <div className="inline-block mb-3 sm:mb-4 md:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
                         <span className="text-xs sm:text-sm font-medium">✨ Your Personal Study Companion</span>
                     </div>
                     
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-4 sm:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-purple-200 px-4">
+                    <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight mb-3 sm:mb-4 md:mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white via-indigo-200 to-purple-200 px-2 sm:px-4">
                         Master Your Studies with Intelligence
                     </h1>
                     
-                    <p className="text-base sm:text-lg md:text-xl text-slate-300 mb-8 sm:mb-12 max-w-3xl mx-auto px-4 leading-relaxed">
+                    <p className="text-sm sm:text-base md:text-lg lg:text-xl text-slate-300 mb-6 sm:mb-8 md:mb-12 max-w-4xl mx-auto px-2 sm:px-4 leading-relaxed">
                         The ultimate all-in-one platform combining AI-powered learning, focus techniques, and smart organization. 
                         Track your progress, stay motivated, and achieve your academic goals.
                     </p>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
+                    <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center items-center px-2 sm:px-4">
                         <button
                             onClick={() => { setIsSignup(true); setShowAuth(true); }}
-                            className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-4 px-8 rounded-xl text-base sm:text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl shadow-indigo-500/50"
+                            className="w-full xs:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl shadow-indigo-500/50"
                         >
                             Start Free Today
                         </button>
                         <button
                             onClick={() => { setIsSignup(false); setShowAuth(true); }}
-                            className="w-full sm:w-auto bg-white/10 backdrop-blur-md text-white font-bold py-4 px-8 rounded-xl text-base sm:text-lg hover:bg-white/20 transition-all border border-white/20"
+                            className="w-full xs:w-auto bg-white/10 backdrop-blur-md text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:bg-white/20 transition-all border border-white/20"
                         >
                             Sign In
                         </button>
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-8 mt-12 sm:mt-20 max-w-3xl mx-auto px-4">
-                        <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">25min</div>
+                    <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-8 mt-8 sm:mt-12 md:mt-20 max-w-4xl mx-auto px-2 sm:px-4">
+                        <div className="bg-white/5 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10">
+                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">25min</div>
                             <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Avg Focus Time</div>
                         </div>
-                        <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">3.5x</div>
+                        <div className="bg-white/5 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10">
+                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 to-teal-400">3.5x</div>
                             <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Retention Boost</div>
                         </div>
-                        <div className="bg-white/5 backdrop-blur-md p-4 sm:p-6 rounded-2xl border border-white/10 col-span-2 sm:col-span-1">
-                            <div className="text-2xl sm:text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400">85%</div>
+                        <div className="bg-white/5 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10 xs:col-span-2 sm:col-span-1">
+                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-pink-400 to-rose-400">85%</div>
                             <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Goal Completion</div>
                         </div>
                     </div>
                 </div>
 
                 {/* Features Section */}
-                <div className="mt-20 sm:mt-32 lg:mt-40">
-                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-8 sm:mb-16 text-center px-4">Everything You Need to Excel</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4">
+                <div className="mt-12 sm:mt-20 md:mt-32 lg:mt-40">
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 md:mb-16 text-center px-2 sm:px-4">Everything You Need to Excel</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4">
                         {features.map((feature, index) => (
                             <div 
                                 key={feature.name} 
-                                className="group bg-white/5 backdrop-blur-md p-6 sm:p-8 rounded-2xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer animate-fade-in-up"
+                                className="group bg-white/5 backdrop-blur-md p-4 sm:p-6 md:p-8 rounded-2xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer animate-fade-in-up"
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <div className={`inline-block p-3 sm:p-4 bg-gradient-to-br ${feature.gradient} rounded-xl mb-4 sm:mb-6 text-3xl sm:text-4xl group-hover:scale-110 transition-transform`}>
+                                <div className={`inline-block p-2 sm:p-3 md:p-4 bg-gradient-to-br ${feature.gradient} rounded-xl mb-3 sm:mb-4 md:mb-6 text-2xl sm:text-3xl md:text-4xl group-hover:scale-110 transition-transform`}>
                                     {feature.icon}
                                 </div>
-                                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{feature.name}</h3>
-                                <p className="text-sm sm:text-base text-slate-400 leading-relaxed">{feature.desc}</p>
+                                <h3 className="text-base sm:text-lg md:text-xl font-bold mb-2 sm:mb-3">{feature.name}</h3>
+                                <p className="text-xs sm:text-sm md:text-base text-slate-400 leading-relaxed">{feature.desc}</p>
                             </div>
                         ))}
                     </div>
@@ -278,8 +284,8 @@ const LandingPage = ({ onLogin }) => {
             </main>
 
             {showAuth && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
-                    <div className="bg-slate-900 border border-white/10 rounded-2xl shadow-2xl max-w-md w-full p-6 sm:p-8 relative animate-scale-in">
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50 animate-fade-in">
+                    <div className="bg-slate-900 border border-white/10 rounded-2xl shadow-2xl max-w-md w-full p-4 sm:p-6 md:p-8 relative animate-scale-in">
                         <button
                             onClick={() => setShowAuth(false)}
                             className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
@@ -288,7 +294,13 @@ const LandingPage = ({ onLogin }) => {
                         </button>
 
                         <div className="text-center mb-6 sm:mb-8">
-                            <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-2xl shadow-lg mx-auto mb-4">A</div>
+                            <div className="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg mx-auto mb-4 overflow-hidden">
+                                <img 
+                                    src="https://img.freepik.com/premium-vector/light-bulb-with-brain-icon-vector-illustration-education-learning-concept_1185634-4382.jpg" 
+                                    alt="StudyMentor Logo" 
+                                    className="w-full h-full object-cover rounded-xl"
+                                />
+                            </div>
                             <h2 className="text-2xl sm:text-3xl font-bold mb-2">{isSignup ? 'Create Account' : 'Welcome Back'}</h2>
                             <p className="text-sm sm:text-base text-slate-400">{isSignup ? 'Start your learning journey today' : 'Sign in to continue learning'}</p>
                         </div>
@@ -314,7 +326,7 @@ const LandingPage = ({ onLogin }) => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="you@example.com"
+                                    placeholder="xyz@gmail.com"
                                     className="w-full p-3 sm:p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
                                     required
                                 />
@@ -432,21 +444,21 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
             <button
                 onClick={() => { setPage(pageName); setMobileOpen?.(false); }}
                 className={`group w-full flex items-center justify-between text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
-                    isActive ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transform scale-105' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 hover:scale-105'
+                    isActive ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg transform scale-105' : 'text-slate-300 hover:bg-white/10 hover:text-white hover:scale-105'
                 }`}
             >
                 <div className="flex items-center space-x-3">
-                    <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-500'} transition-colors`}>{icon}</div>
+                    <div className={`${isActive ? 'text-white' : 'text-slate-400 group-hover:text-indigo-300'} transition-colors`}>{icon}</div>
                     <span>{children}</span>
                 </div>
-                {badge && (<span className={`px-2 py-1 text-xs rounded-full ${isActive ? 'bg-white/20' : 'bg-indigo-100 text-indigo-600'}`}>{badge}</span>)}
+                {badge && (<span className={`px-2 py-1 text-xs rounded-full ${isActive ? 'bg-white/20' : 'bg-indigo-500/20 text-indigo-300'}`}>{badge}</span>)}
             </button>
         );
     };
 
     const NavSection = ({ title, children }) => (
         <div className="mb-8">
-            <h3 className="px-4 text-xs text-slate-400 uppercase font-bold tracking-wider mb-3">{title}</h3>
+            <h3 className="px-4 text-xs text-slate-300 uppercase font-bold tracking-wider mb-3">{title}</h3>
             <div className="space-y-1">{children}</div>
         </div>
     );
@@ -454,10 +466,16 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
     // Desktop Sidebar
     const SidebarBody = (
         <div className="mb-10 flex items-center px-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center font-bold text-white text-xl shadow-lg">A</div>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                <img 
+                    src="https://img.freepik.com/premium-vector/light-bulb-with-brain-icon-vector-illustration-education-learning-concept_1185634-4382.jpg" 
+                    alt="StudyMentor Logo" 
+                    className="w-full h-full object-cover rounded-xl"
+                />
+            </div>
             <div className="ml-4">
-                <div className="font-bold text-slate-800 text-lg">Welcome</div>
-                <div className="text-slate-500 text-sm">Study App</div>
+                <div className="font-bold text-white text-lg">StudyMentor</div>
+                <div className="text-slate-300 text-sm">Your Study Companion</div>
             </div>
         </div>
     );
@@ -465,7 +483,7 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
     return (
         <>
             {/* Desktop (lg+) */}
-            <div className="hidden lg:flex w-72 h-screen bg-white/80 backdrop-blur-lg border-r border-slate-200 p-6 flex-col fixed shadow-xl">
+            <div className="hidden lg:flex w-72 h-screen bg-gradient-to-b from-slate-800/90 via-slate-700/90 to-slate-800/90 backdrop-blur-lg border-r border-white/20 p-6 flex-col fixed shadow-2xl">
                 {SidebarBody}
                 <nav className="flex-1 overflow-y-auto">
                     <NavSection title="Dashboard">
@@ -481,7 +499,7 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
                 <div className="pt-6 border-t border-slate-200">
                     <button onClick={onSignOut} className="group w-full flex items-center space-x-3 text-left px-4 py-3 rounded-xl text-sm font-medium text-slate-600 hover:bg-red-50 hover:text-red-600 transition-all">
                         <SignOutIcon className="text-slate-400 group-hover:text-red-500"/>
-                        <span>Back to Landing</span>
+                        <span className="white">Back to Landing</span>
                     </button>
                 </div>
             </div>
@@ -490,7 +508,7 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
             {isMobileOpen && (
                 <div className="lg:hidden fixed inset-0 z-50">
                     <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)}></div>
-                    <div className="absolute left-0 top-0 bottom-0 w-72 bg-white/90 backdrop-blur-lg border-r border-slate-200 p-6 flex flex-col shadow-2xl">
+                    <div className="absolute left-0 top-0 bottom-0 w-72 bg-gradient-to-b from-slate-800/95 via-slate-700/95 to-slate-800/95 backdrop-blur-lg border-r border-white/20 p-6 flex flex-col shadow-2xl">
                         {SidebarBody}
                         <nav className="flex-1 overflow-y-auto">
                             <NavSection title="Dashboard">
@@ -934,7 +952,7 @@ const NoteEditorPage = ({ note, onExit }) => {
 
     const [summary, setSummary] = useState(null);
     const [isSummarizing, setIsSummarizing] = useState(false);
-    const API_KEY = null; // Disabled for security - Gemini API key should not be exposed publicly
+    const API_KEY = (import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.REACT_APP_GEMINI_API_KEY || '').trim();
 
     useEffect(() => {
         if (content === currentNoteData.content && title === currentNoteData.title) { setStatus('Saved'); return; }
@@ -956,7 +974,12 @@ const NoteEditorPage = ({ note, onExit }) => {
     }, [content, title, currentNoteData]);
 
     const handleSummarize = async () => {
-        if (!content.trim() || !API_KEY || isSummarizing) return;
+        if (!content.trim() || isSummarizing) return;
+        
+        if (!API_KEY) {
+            setSummary("Error: Gemini API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables.");
+            return;
+        }
         
         setIsSummarizing(true);
         setSummary("Generating summary...");
@@ -990,23 +1013,39 @@ const NoteEditorPage = ({ note, onExit }) => {
 
     return (
         <div className="flex flex-col h-screen animate-fadeIn">
-            <header className="flex-shrink-0 bg-white/5 backdrop-blur-md border-b border-white/10 z-10 sticky top-0">
-                <div className="px-12 py-4 flex justify-between items-center">
-                    <button onClick={onExit} className="flex items-center text-sm font-medium text-slate-300 hover:text-white transition-colors">
-                        <svg className="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                        Back to Notes
-                    </button>
-                    
+            <header className="flex-shrink-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 sticky top-0 shadow-lg">
+                <div className="px-4 sm:px-8 lg:px-12 py-4 sm:py-6 flex justify-between items-center">
                     <div className="flex items-center space-x-4">
+                        <button onClick={onExit} className="flex items-center px-4 py-2 rounded-xl bg-white/10 text-slate-300 hover:text-white hover:bg-white/20 transition-all border border-white/20">
+                            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                            <span className="font-medium">Back to Notes</span>
+                        </button>
+                        <div className="hidden sm:flex items-center space-x-2 text-slate-400">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span className="text-sm">Note Editor</span>
+                        </div>
+                    </div>
+                    
+                    <div className="flex items-center space-x-3 sm:space-x-4">
                         <button 
                             onClick={handleSummarize}
-                            disabled={!content.trim() || isSummarizing || !API_KEY}
-                            className="flex items-center text-sm font-medium text-indigo-300 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                            disabled={!content.trim() || isSummarizing}
+                            className="flex items-center px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-indigo-500/30"
                         >
-                            <AlignLeftIcon className="w-5 h-5 mr-1" />
-                            {isSummarizing ? 'Summarizing...' : 'Summarize'}
+                            <AlignLeftIcon className="w-5 h-5 mr-2" />
+                            <span className="hidden sm:inline">
+                                {isSummarizing ? 'Summarizing...' : (!API_KEY ? 'Summarize (API Key Required)' : 'Summarize')}
+                            </span>
+                            <span className="sm:hidden">
+                                {isSummarizing ? '...' : 'AI'}
+                            </span>
                         </button>
-                        <div className="text-sm text-slate-300">{status}</div>
+                        <div className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
+                            <div className={`w-2 h-2 rounded-full ${status === 'Saved' ? 'bg-green-400' : status === 'Saving...' ? 'bg-yellow-400' : 'bg-red-400'}`}></div>
+                            <span className="text-sm text-slate-300">{status}</span>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -1169,12 +1208,7 @@ const TimerPage = () => {
     const targetTimeRef = useRef(0);
     const audioRef = useRef(new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV'));
 
-    useEffect(() => {
-        if (!isActive) {
-            setMinutes(mode === 'focus' ? focusDuration : breakDuration);
-            setSeconds(0);
-        }
-    }, [focusDuration, breakDuration, mode, isActive]);
+    // Removed auto-reset - users can manually reset when needed
 
     useEffect(() => {
         if (isActive && !isPaused) {
@@ -1209,10 +1243,9 @@ const TimerPage = () => {
     }, [isActive, isPaused, mode, focusDuration, breakDuration]); 
 
     const handleStart = () => {
-        const currentTotalSeconds = (mode === 'focus' ? focusDuration : breakDuration) * 60;
-        targetTimeRef.current = Date.now() + currentTotalSeconds * 1000;
-        setMinutes(mode === 'focus' ? focusDuration : breakDuration); 
-        setSeconds(0);
+        // Calculate remaining time from current minutes and seconds
+        const currentTimeSeconds = minutes * 60 + seconds;
+        targetTimeRef.current = Date.now() + currentTimeSeconds * 1000;
         setIsActive(true);
         setIsPaused(false);
     };
@@ -1231,6 +1264,12 @@ const TimerPage = () => {
     };
 
     const handleStop = () => {
+        setIsActive(false);
+        setIsPaused(false);
+        // Don't reset the timer, just stop it
+    };
+
+    const handleReset = () => {
         setIsActive(false);
         setIsPaused(false);
         setMinutes(mode === 'focus' ? focusDuration : breakDuration);
@@ -1346,7 +1385,7 @@ const TimerPage = () => {
                                 <circle
                                     cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="2" fill="none"
                                     className={`
-                                        transition-colors duration-500 text-white/10
+                                        transition-colors duration-500 text-purple-800/50
                                     `}
                                 />
                                 <circle
@@ -1380,7 +1419,7 @@ const TimerPage = () => {
                     <div className="flex justify-center space-x-4 mb-8">
                         {!isActive ? (
                             <button onClick={handleStart} className="flex items-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-8 py-4 rounded-xl hover:from-indigo-600 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all font-medium">
-                                <PlayIcon /> Start
+                                <PlayIcon /> {minutes === (mode === 'focus' ? focusDuration : breakDuration) && seconds === 0 ? 'Start' : 'Resume'}
                             </button>
                         ) : (
                             <>
@@ -1395,6 +1434,18 @@ const TimerPage = () => {
                                     `}
                                 >
                                     <StopIcon /> Stop
+                                </button>
+                                <button
+                                    onClick={handleReset}
+                                    className={`
+                                        flex items-center px-6 py-4 rounded-xl transform hover:scale-105 transition-all font-medium
+                                        bg-red-500/20 text-red-300 hover:bg-red-500/30 border border-red-500/30
+                                    `}
+                                >
+                                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                    </svg>
+                                    Reset
                                 </button>
                                 <button
                                     onClick={handleSkip}
@@ -1440,7 +1491,7 @@ const AIAssistantPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const chatEndRef = useRef(null);
 
-    const API_KEY = null; // Disabled for security - Gemini API key should not be exposed publicly
+    const API_KEY = (import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.REACT_APP_GEMINI_API_KEY || '').trim();
 
     const scrollToBottom = () => {
         chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1713,69 +1764,112 @@ const FlashcardsPage = () => {
         }
 
         return (
-            <div className="fixed inset-0 flex flex-col items-center p-4 animate-fade-in">
+            <div className="fixed inset-0 flex flex-col animate-fade-in">
                 <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950" />
                 <AnimatedBackground />
 
-                {/* Header */}
-                <div className="relative z-10 w-full max-w-3xl">
-                    <div className="mt-2 rounded-2xl px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 flex items-center justify-between">
-                        <button onClick={() => setViewMode('decks')} className="inline-flex items-center px-3 py-2 rounded-lg bg-white/10 text-slate-200 hover:bg-white/20 transition">
-                            <svg className="w-5 h-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-                            Exit
+                {/* Minimal Header - Just Progress and Exit */}
+                <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="text-center">
+                        <div className="text-lg text-slate-300 mb-4">
+                            {studyDeckName || 'Study Session'} • Card {studySession.currentIndex + 1} of {studySession.cards.length}
+                        </div>
+                        
+                        {/* Progress Bar */}
+                        <div className="max-w-md mx-auto mb-4">
+                            <div className="flex justify-between text-sm font-medium text-slate-300 mb-2">
+                                <span>Progress</span>
+                                <span className="text-indigo-300">{Math.round(progress)}%</span>
+                            </div>
+                            <div className="w-full bg-slate-800/80 rounded-full h-3 overflow-hidden shadow-inner border border-slate-700/50">
+                                <div className="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 h-3 rounded-full transition-all duration-700 ease-out shadow-lg relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Exit Button */}
+                        <button onClick={() => setViewMode('decks')} className="inline-flex items-center px-4 py-2 rounded-xl bg-white/10 text-slate-200 hover:bg-white/20 hover:text-white transition-all duration-200 border border-white/20">
+                            <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            <span className="font-medium">Exit Study</span>
                         </button>
-                        <div className="text-sm sm:text-base font-semibold text-white truncate px-2">{studyDeckName || 'Study'}</div>
-                        <div className="text-xs text-slate-300 whitespace-nowrap">{studySession.currentIndex + 1} / {studySession.cards.length}</div>
                     </div>
+                </div>
 
-                    {/* Progress */}
-                    <div className="mt-3 px-1">
-                        <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden">
-                            <div className="bg-gradient-to-r from-indigo-400 to-emerald-400 h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                {/* Card - Consistent Width */}
+                <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="w-full">
+                        <div className={`${cardAnimationClass}`}>
+                            <div className="rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-2xl p-8 sm:p-12 min-h-[400px] flex flex-col justify-center">
+                                <div className="text-center mb-8">
+                                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-sm font-medium mb-4">
+                                        Question
+                                    </div>
+                                    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight">{currentCard.front}</h2>
+                                </div>
+
+                                {!revealed && (
+                                    <div className="flex justify-center">
+                                        <button onClick={() => setRevealed(true)} className="px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold text-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105 shadow-xl">
+                                            <span className="flex items-center">
+                                                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                                Reveal Answer
+                                            </span>
+                                        </button>
+                                    </div>
+                                )}
+
+                                {revealed && (
+                                    <div className="mt-8 rounded-2xl border border-white/20 bg-white/5 p-6 sm:p-8">
+                                        <div className="text-center">
+                                            <div className="inline-flex items-center px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-sm font-medium mb-4">
+                                                Answer
+                                            </div>
+                                            <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-relaxed">{currentCard.back}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Card */}
-                <div className={`relative z-10 w-full max-w-3xl mt-6 ${cardAnimationClass}`}>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_0_40px_rgba(99,102,241,0.25)] p-6 sm:p-8">
-                        <p className="text-slate-300 text-xs uppercase tracking-wide mb-2">Question</p>
-                        <p className="text-2xl sm:text-3xl font-semibold text-white text-center">{currentCard.front}</p>
+                {/* Actions - Consistent Width */}
+                <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6">
+                    <div className="w-full">
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
+                            {/* Previous Button */}
+                            <button onClick={handlePrevCard} className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-slate-200 hover:bg-white/20 hover:text-white transition-all duration-200 shadow-lg">
+                                <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
+                                <span className="font-medium">Previous</span>
+                            </button>
 
-                        {!revealed && (
-                            <div className="mt-6 flex justify-center">
-                                <button onClick={() => setRevealed(true)} className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:from-indigo-600 hover:to-purple-700 transition shadow">
-                                    Reveal Answer
+                            {/* Action Buttons */}
+                            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+                                <button onClick={() => handleNextCard('left')} className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-200 hover:bg-red-500/30 hover:border-red-400/60 hover:text-red-100 transition-all duration-200 shadow-lg font-medium">
+                                    <XIcon className="w-5 h-5 mr-2"/> 
+                                    <span>Didn't Know</span>
+                                </button>
+                                <button onClick={() => handleNextCard('right')} className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 hover:bg-emerald-500/30 hover:border-emerald-400/60 hover:text-emerald-100 transition-all duration-200 shadow-lg font-medium">
+                                    <CheckIcon className="w-5 h-5 mr-2"/> 
+                                    <span>I Knew It</span>
                                 </button>
                             </div>
-                        )}
 
-                        {revealed && (
-                            <div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-4 sm:p-6">
-                                <p className="text-slate-300 text-xs uppercase tracking-wide mb-2">Answer</p>
-                                <p className="text-xl sm:text-2xl font-medium text-white text-center">{currentCard.back}</p>
-                            </div>
-                        )}
+                            {/* Finish Session Button */}
+                            {studySession.currentIndex === (studySession.cards.length - 1) && (
+                                <button onClick={() => { setIsCompleted(true); addActivity('notes'); }} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400/50 text-white hover:from-indigo-600 hover:to-purple-700 hover:border-indigo-300/60 transition-all duration-200 shadow-xl font-bold">
+                                    <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Finish Session
+                                </button>
+                            )}
+                        </div>
                     </div>
-                </div>
-
-                {/* Actions */}
-                <div className="relative z-10 mt-6 flex items-center flex-wrap gap-3 sm:gap-4">
-                    <button onClick={handlePrevCard} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-white/10 border border-white/20 text-slate-200 hover:bg-white/20 transition shadow">
-                        <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
-                        Previous
-                    </button>
-                    <button onClick={() => handleNextCard('left')} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 hover:bg-red-500/20 hover:border-red-400/50 transition shadow">
-                        <XIcon className="w-5 h-5 mr-2"/> {"Didn't Know"}
-                    </button>
-                    <button onClick={() => handleNextCard('right')} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/20 hover:border-emerald-400/50 transition shadow">
-                        <CheckIcon className="w-5 h-5 mr-2"/> {"I Knew It"}
-                    </button>
-                    {studySession.currentIndex === (studySession.cards.length - 1) && (
-                        <button onClick={() => { setIsCompleted(true); addActivity('notes'); }} className="inline-flex items-center px-5 sm:px-6 py-3 sm:py-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 hover:bg-indigo-500/20 hover:border-indigo-400/50 transition shadow">
-                            Finish Session
-                        </button>
-                    )}
                 </div>
             </div>
     );
@@ -1842,7 +1936,7 @@ const FlashcardsPage = () => {
                     </div>
                  ) : (
                      <div className="text-center py-16 rounded-2xl border border-dashed border-white/20 bg-white/5 backdrop-blur-md">
-                        <LayersIcon className="w-12 h-12 text-slate-300 mx-auto mb-4"/>
+                        <FlashcardIcon className="w-12 h-12 text-slate-300 mx-auto mb-4"/>
                         <h3 className="text-xl font-semibold text-white mb-2">No decks yet</h3>
                         <p className="text-slate-300 mb-4">Create your first deck to start studying.</p>
                         <button onClick={() => newDeckInputRef.current?.focus()} className="inline-flex items-center px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium hover:from-indigo-600 hover:to-purple-700 shadow transition">
@@ -1856,9 +1950,17 @@ const FlashcardsPage = () => {
 };
 
 const Dashboard = ({ onSignOut }) => {
-    const [currentPage, setCurrentPage] = useState('home');
+    const [currentPage, setCurrentPage] = useState(() => {
+        // Get the last visited page from localStorage, default to 'home'
+        return localStorage.getItem('studyMentorCurrentPage') || 'home';
+    });
     const [editingNote, setEditingNote] = useState(null);
     const [isMobileOpen, setMobileOpen] = useState(false);
+
+    // Save current page to localStorage whenever it changes
+    useEffect(() => {
+        localStorage.setItem('studyMentorCurrentPage', currentPage);
+    }, [currentPage]);
 
     const pageTitles = {
         home: "Study Activity Dashboard",
@@ -1887,18 +1989,36 @@ const Dashboard = ({ onSignOut }) => {
         <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900">
             <Sidebar currentPage={currentPage} setPage={setCurrentPage} onSignOut={onSignOut} isMobileOpen={isMobileOpen} setMobileOpen={setMobileOpen} />
             <main className="flex-1 lg:ml-72">
-                <header className="sticky top-0 bg-white/5 backdrop-blur-md border-b border-white/10 z-10">
+                <header className={`sticky top-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 shadow-lg ${currentPage === 'flashcards' ? 'hidden' : ''}`}>
                     <div className="px-4 sm:px-8 lg:px-12 py-4 sm:py-6 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <button className="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-lg bg-white/10 text-white hover:bg-white/20 focus:outline-none" onClick={() => setMobileOpen(true)} aria-label="Open Menu">
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
                             </button>
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{pageTitles[currentPage] || 'Dashboard'}</h1>
+                            <div className="flex items-center space-x-3">
+                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                                    <img 
+                                        src="https://img.freepik.com/premium-vector/light-bulb-with-brain-icon-vector-illustration-education-learning-concept_1185634-4382.jpg" 
+                                        alt="StudyMentor Logo" 
+                                        className="w-full h-full object-cover rounded-xl"
+                                    />
+                                </div>
+                                <h1 className="text-2xl sm:text-3xl font-extrabold text-white">{pageTitles[currentPage] || 'Dashboard'}</h1>
+                            </div>
                         </div>
-                        <span className="text-xs sm:text-sm text-slate-300">Today: {new Date().toLocaleDateString()}</span>
+                        <div className="flex items-center space-x-3">
+                            <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 shadow-lg">
+                                <div className="flex items-center space-x-2">
+                                    <svg className="w-4 h-4 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                    <span className="text-sm font-medium text-white">Today: {new Date().toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </header>
-                <div className="px-4 sm:px-8 lg:px-12 py-6 lg:py-12">{renderPage()}</div>
+                <div className="px-4 sm:px-8 lg:px-12 py-6 lg:py-12 relative">{renderPage()}</div>
             </main>
         </div>
     );
@@ -1927,21 +2047,29 @@ export default function App() {
     useEffect(() => {
         const sub = onAuthChange(async (user) => {
             if (user) {
-                setIsLoadingData(true);
+                // Only load data if we don't have it already or if it's the first login
+                const hasData = localStorage.getItem('studyNotes') && 
+                               localStorage.getItem('studyTasks') && 
+                               localStorage.getItem('flashcardDecks');
                 
-                // Load data from Supabase when user logs in
-                await loadDataFromSupabase(user.id);
+                if (!hasData) {
+                    setIsLoadingData(true);
+                    
+                    // Load data from Supabase when user logs in
+                    await loadDataFromSupabase(user.id);
+                    
+                    // Sync any existing localStorage data to Supabase (for data created before the fix)
+                    await syncLocalDataToSupabase(user.id);
+                    
+                    setIsLoadingData(false);
+                }
                 
-                // Sync any existing localStorage data to Supabase (for data created before the fix)
-                await syncLocalDataToSupabase(user.id);
-                
-                // Update mockFirestore from localStorage
+                // Always update mockFirestore from localStorage (lightweight operation)
                 mockFirestore.notes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
                 mockFirestore.tasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
                 mockFirestore.decks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
                 mockFirestore.activities = JSON.parse(localStorage.getItem('studyActivities') || '{}');
                 
-                setIsLoadingData(false);
                 setIsLoggedIn(true);
             } else {
                 setIsLoggedIn(false);
@@ -1951,18 +2079,26 @@ export default function App() {
         (async () => {
             const user = await getCurrentUser();
             if (user) {
-                setIsLoadingData(true);
-                await loadDataFromSupabase(user.id);
+                // Only load data if we don't have it already
+                const hasData = localStorage.getItem('studyNotes') && 
+                               localStorage.getItem('studyTasks') && 
+                               localStorage.getItem('flashcardDecks');
                 
-                // Sync any existing localStorage data to Supabase (for data created before the fix)
-                await syncLocalDataToSupabase(user.id);
+                if (!hasData) {
+                    setIsLoadingData(true);
+                    await loadDataFromSupabase(user.id);
+                    
+                    // Sync any existing localStorage data to Supabase (for data created before the fix)
+                    await syncLocalDataToSupabase(user.id);
+                    setIsLoadingData(false);
+                }
                 
+                // Always update mockFirestore from localStorage (lightweight operation)
                 mockFirestore.notes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
                 mockFirestore.tasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
                 mockFirestore.decks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
                 mockFirestore.activities = JSON.parse(localStorage.getItem('studyActivities') || '{}');
                 
-                setIsLoadingData(false);
                 setIsLoggedIn(true);
             }
         })();
