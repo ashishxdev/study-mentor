@@ -1455,7 +1455,7 @@ const NotesPage = ({ onSelectNote }) => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-fadeIn px-4 sm:px-0">
+  <div className="space-y-6 sm:space-y-8 animate-fadeIn">  
       <div className="p-4 sm:p-6 rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10">
         <form
           onSubmit={handleCreateNote}
