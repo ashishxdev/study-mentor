@@ -1106,22 +1106,24 @@ const HomePage = () => {
   };
 
   return (
-    <div className="relative -m-12 p-12 min-h-[calc(100vh-104px)]">
+    <div className="relative -mx-4 -my-6 sm:-m-8 lg:-m-12 px-4 py-6 sm:p-8 lg:p-12 min-h-[calc(100vh-104px)]">
       <AnimatedBackground />
-      <div className="relative z-10 space-y-8 animate-fade-in">
+      <div className="relative z-10 space-y-6 sm:space-y-8 animate-fade-in">
         <div>
-          <h2 className="text-3xl font-bold text-white">Dashboard</h2>
-          <p className="text-slate-400 mt-1">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white">
+            Dashboard
+          </h2>
+          <p className="text-sm sm:text-base text-slate-400 mt-1">
             Here is your study activity at a glance.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <GlassCard className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+          <GlassCard className="p-4 sm:p-6">
             <FocusList />
           </GlassCard>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <GlassStatCard
               title="Current Streak"
               value={`${stats.currentStreak} days`}
