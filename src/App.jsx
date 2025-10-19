@@ -98,7 +98,7 @@ const LandingPage = ({ onLogin }) => {
                             onLogin();
                             setShowAuth(false);
                         }
-                    } catch (signInError) {
+                    } catch {
                         setAuthError('Account created! Please check your email for confirmation, then sign in.');
                         setIsSignup(false);
                     }
@@ -201,7 +201,6 @@ const LandingPage = ({ onLogin }) => {
                     </div>
                 </div>
 
-                {/* Features Section */}
                 <div className="mt-12 sm:mt-20 md:mt-32 lg:mt-40">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6 sm:mb-8 md:mb-16 text-center px-2 sm:px-4">Everything You Need to Excel</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-4">
@@ -462,191 +461,6 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
     );
 };
 
-const ContributionsGraph = ({ year, data, onRefresh }) => {
-    const [monthLabels, setMonthLabels] = useState([]);
-    const [paddedDates, setPaddedDates] = useState([]);
-
-    const today = new Date().toISOString().split('T')[0]; 
-    useEffect(() => {
-        const startDate = new Date(year, 0, 1); 
-        const endDate = new Date(year, 11, 31);
-
-        const dates = [];
-        const mLabels = [];
-
-        const startDay = startDate.getDay(); 
-        for (let i = 0; i < startDay; i++) {
-            dates.push(null); 
-        }
-
-        let currentDate = new Date(startDate);
-        let lastMonth = -1;
-
-        while (currentDate <= endDate) {
-            dates.push(new Date(currentDate));
-
-            const currentMonth = currentDate.getMonth();
-            if (currentMonth !== lastMonth) {
-                const monthName = currentDate.toLocaleString('default', { month: 'short' });
-                const colIndex = Math.floor((dates.length - 1) / 7);
-
-                mLabels.push({
-                    name: monthName,
-                    colIndex: colIndex 
-                });
-                lastMonth = currentMonth;
-            }
-
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        setPaddedDates(dates);
-        setMonthLabels(mLabels);
-    }, [year]); 
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            onRefresh();
-        }, 60000);
-        return () => clearInterval(interval);
-    }, [onRefresh]);
-
-    const getLevel = (activity) => {
-        if (!activity) return 0;
-        const total = activity.total || 0;
-        if (total >= 5) return 4;
-        if (total >= 3) return 3;
-        if (total >= 2) return 2;
-        if (total >= 1) return 1;
-        return 0;
-    };
-
-    const getTooltipText = (activity, date) => {
-        if (!date) return '';
-        if (!activity || activity.total === 0) {
-            return `No activity on ${date.toDateString()}`;
-        }
-        const parts = [];
-        if (activity.notes > 0) parts.push(`${activity.notes} note${activity.notes > 1 ? 's' : ''}`);
-        if (activity.timer > 0) parts.push(`${activity.timer} focus session${activity.timer > 1 ? 's' : ''}`);
-        return `${parts.join(', ')} on ${date.toDateString()}`;
-    };
-
-    const colors = [
-        'bg-slate-800 hover:bg-slate-700',
-        'bg-emerald-900 hover:bg-emerald-800', 
-        'bg-emerald-700 hover:bg-emerald-600', 
-        'bg-emerald-500 hover:bg-emerald-400', 
-        'bg-emerald-300 hover:bg-emerald-200' 
-    ];
-
-    const totalContributions = Object.values(data).reduce((acc, activity) => acc + (activity.total || 0), 0);
-
-    const totalCols = 53;
-
-    return (
-        <div className="p-6 bg-slate-900 rounded-2xl shadow-lg border border-slate-700 overflow-x-auto">
-            <h3 className="text-lg font-semibold text-white mb-4">
-                {totalContributions} contributions in {year}
-            </h3>
-
-            <div
-                className="grid text-xs text-slate-500 mb-2"
-                style={{
-                    paddingLeft: '2.5rem',
-                    gridTemplateColumns: `repeat(${totalCols}, calc(0.75rem + 0.25rem))`
-                }}
-            >
-                {monthLabels.map((month, i) => (
-                    <span
-                        key={i}
-                        className="text-left -ml-1"
-                        style={{
-                            gridColumnStart: month.colIndex + 1
-                        }}
-                    >
-                        {month.name}
-                    </span>
-                ))}
-            </div>
-
-            <div className="grid grid-cols-[auto_1fr] gap-x-4">
-                <div className="grid grid-rows-7 gap-y-1 text-xs text-slate-500 pr-2">
-                    <div className="h-3"></div>
-                    <div className="h-3 flex items-center">Mon</div>
-                    <div className="h-3"></div>
-                    <div className="h-3 flex items-center">Wed</div>
-                    <div className="h-3"></div>
-                    <div className="h-3 flex items-center">Fri</div>
-                    <div className="h-3"></div>
-                </div>
-
-                <div className="relative">
-                    <div className="grid grid-flow-col grid-rows-7 gap-1">
-                        {paddedDates.map((date, index) => {
-                            if (!date) {
-                                return <div key={index} className="w-3 h-3 rounded-sm bg-transparent" />;
-                            }
-
-                            const dateString = date.toISOString().split('T')[0];
-                            const activity = data[dateString];
-                            const level = getLevel(activity);
-
-                            return (
-                                <div
-                                    key={index}
-                                    className={`w-3 h-3 rounded-sm transition-all duration-200 cursor-pointer ${colors[level]} ${
-                                        dateString === today ? 'ring-2 ring-indigo-400' : ''
-                                    }`}
-                                    title={getTooltipText(activity, date)}
-                                />
-                            );
-                        })}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex justify-end items-center mt-4">
-                <div className="flex items-center text-xs text-slate-500 space-x-2">
-                    <span>Less</span>
-                    <div className="w-3 h-3 rounded-sm bg-slate-800"></div>
-                    <div className="w-3 h-3 rounded-sm bg-emerald-900"></div>
-                    <div className="w-3 h-3 rounded-sm bg-emerald-700"></div>
-                    <div className="w-3 h-3 rounded-sm bg-emerald-500"></div>
-                    <div className="w-3 h-3 rounded-sm bg-emerald-300"></div>
-                    <span>More</span>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const StatCard = ({ title, value, subtitle, icon, color = "indigo" }) => {
-    const colorClasses = {
-        indigo: 'from-indigo-500 to-purple-600',
-        emerald: 'from-emerald-500 to-teal-600',
-        amber: 'from-amber-500 to-orange-600',
-        rose: 'from-rose-500 to-pink-600'
-    };
-
-    return (
-        <div className="p-6 rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300">
-            <div className="flex items-start justify-between">
-                <div>
-                    <h4 className="text-sm text-slate-300 font-medium mb-2">{title}</h4>
-                    <p className="text-3xl font-bold text-white mb-1">{value}</p>
-                    {subtitle && <p className="text-sm text-slate-400">{subtitle}</p>}
-                </div>
-                {icon && (
-                    <div className={`p-3 rounded-xl bg-gradient-to-r ${colorClasses[color]} text-white shadow`}>
-                        {icon}
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-};
-
 const FocusList = () => {
     const [tasks, setTasks] = useState(mockFirestore.tasks);
     const [newTaskText, setNewTaskText] = useState('');
@@ -843,14 +657,11 @@ const HomePage = () => {
                     <p className="text-slate-400 mt-1">Here is your study activity at a glance.</p>
                 </div>
                 
-                {/* Main Grid Layout */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Left Column: Focus List */}
                     <GlassCard className="p-6">
                         <FocusList />
                     </GlassCard>
 
-                    {/* Right Column: Stats */}
                     <div className="space-y-6">
                          <GlassStatCard title="Current Streak" value={`${stats.currentStreak} days`} subtitle="Keep it going!" icon={streakIcon} color="indigo" />
                          <GlassStatCard title="Total Active Days" value={`${stats.totalDays} days`} subtitle="Days with activity" icon={totalIcon} color="emerald" />
@@ -1046,7 +857,7 @@ const NotesPage = ({ onSelectNote }) => {
 
         onSelectNote(newNote); 
         try { const user = await getCurrentUser(); if (user) await upsertNote(user.id, newNote); } catch {}
-        addActivity('notes'); // Track note creation activity
+        addActivity('notes');
     };
 
     const handleDeleteNote = async (e, noteId) => {
@@ -1165,7 +976,6 @@ const TimerPage = () => {
     }, [isActive, isPaused, mode, focusDuration, breakDuration]); 
 
     const handleStart = () => {
-        // Calculate remaining time from current minutes and seconds
         const currentTimeSeconds = minutes * 60 + seconds;
         targetTimeRef.current = Date.now() + currentTimeSeconds * 1000;
         setIsActive(true);
@@ -1577,7 +1387,7 @@ const FlashcardsPage = () => {
                         setSelectedDeck(storedDecks.find(d => d.id === selectedDeck.id));
                    }
                 }
-             } catch (error) { console.error("Error reading decks from localStorage:", error); }
+             } catch (error) { console.error("Error reading decks from localStorage", error); }
         };
         const interval = setInterval(checkStorage, 2000);
         window.addEventListener('focus', checkStorage);
@@ -1684,14 +1494,12 @@ const FlashcardsPage = () => {
                 <div className="absolute inset-0 bg-pruple-900" />
                 <AnimatedBackground />
 
-                {/* Minimal Header - Just Progress and Exit */}
                 <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-6">
                     <div className="text-center">
                         <div className="text-lg text-slate-300 mb-4">
                             {studyDeckName || 'Study Session'} • Card {studySession.currentIndex + 1} of {studySession.cards.length}
                         </div>
                         
-                        {/* Progress Bar */}
                         <div className="max-w-md mx-auto mb-4">
                             <div className="flex justify-between text-sm font-medium text-slate-300 mb-2">
                                 <span>Progress</span>
@@ -1846,7 +1654,6 @@ const FlashcardsPage = () => {
                     </div>
                  ) : (
                      <div className="text-center py-16 rounded-2xl border border-dashed border-white/20 bg-white/5 backdrop-blur-md">
-                        {/* <FlashcardIcon className="w-12 h-12 text-slate-300 mx-auto mb-4"/> */}
                         <h3 className="text-xl font-semibold text-white mb-2">No decks yet</h3>
                         <p className="text-slate-300 mb-4">Create your first deck to start studying.</p>
                         <button onClick={() => newDeckInputRef.current?.focus()} className="inline-flex items-center px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium hover:from-indigo-600 hover:to-purple-700 shadow transition">
@@ -1940,7 +1747,7 @@ export default function App() {
         const handleAuthCallback = async () => {
             const { data } = await supabase.auth.getSession();
             if (data.session) {
-                console.log('✅ Email verification successful');
+                console.log('✅ Successful');
             }
         };
         
@@ -1988,12 +1795,10 @@ export default function App() {
                     setIsLoadingData(true);
                     await loadDataFromSupabase(user.id);
                     
-                    // Sync any existing localStorage data to Supabase (for data created before the fix)
                     await syncLocalDataToSupabase(user.id);
                     setIsLoadingData(false);
                 }
                 
-                // Always update mockFirestore from localStorage (lightweight operation)
                 mockFirestore.notes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
                 mockFirestore.tasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
                 mockFirestore.decks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');

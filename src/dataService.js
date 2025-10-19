@@ -1,7 +1,6 @@
 import { supabase } from './supabaseClient';
 
 export async function signUpWithEmail({ email, password, name }) {
-    console.log('🔧 signUpWithEmail called with:', { email, name: name ? 'provided' : 'not provided' });
     
     const currentDomain = window.location.origin;
     
@@ -17,22 +16,17 @@ export async function signUpWithEmail({ email, password, name }) {
             emailRedirectTo: redirectUrl
         },
     });
-    
-    console.log('🔧 Supabase signUp response:', { data, error });
-    
+        
     return { data, error };
 }
 
 export async function signInWithEmail({ email, password }) {
-    console.log('🔧 signInWithEmail called with:', { email });
     
     const { data, error } = await supabase.auth.signInWithPassword({ 
         email, 
         password 
     });
-    
-    console.log('🔧 Supabase signIn response:', { data, error });
-    
+        
     return { data, error };
 }
 
@@ -167,10 +161,8 @@ export async function syncLocalDataToSupabase(userId) {
             });
         }
 
-        console.log('✅ All data synced to Supabase');
         return true;
-    } catch (error) {
-        console.error('❌ Error syncing data to Supabase:', error);
+    } catch {
         return false;
     }
 }
@@ -196,10 +188,8 @@ export async function loadDataFromSupabase(userId) {
         const activities = await fetchActivities(userId);
         localStorage.setItem('studyActivities', JSON.stringify(activities));
 
-        console.log('✅ All data loaded from Supabase');
         return true;
-    } catch (error) {
-        console.error('❌ Error loading data from Supabase:', error);
+    } catch {
         return false;
     }
 }

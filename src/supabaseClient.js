@@ -9,6 +9,10 @@ const fallbackKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const finalUrl = supabaseUrl || fallbackUrl;
 const finalKey = supabaseAnonKey || fallbackKey;
 
+if (!finalUrl || !finalKey) {
+    console.error('[Supabase] Missing env. Ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set in .env and restart dev server.');
+}
+
 export const supabase = createClient(finalUrl, finalKey, {
     auth: {
         persistSession: true,
