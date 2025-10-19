@@ -2333,10 +2333,10 @@ const FlashcardsPage = ({ setMobileOpen }) => {
       cardAnimationClass = "animate-fly-out-left";
 
     if (isCompleted) {
-  return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center p-6 z-50">
-      <div className="absolute inset-0 bg-slate-900" />
-      <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 text-center">
+      return (
+        <div className="fixed inset-0 flex flex-col items-center justify-center p-6 z-50">
+          <div className="absolute inset-0 bg-slate-900" />
+          <div className="relative z-10 w-full max-w-md rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 p-6 text-center">
             <h3 className="text-2xl font-bold text-white mb-2">
               Session Complete 🎉
             </h3>
@@ -2377,13 +2377,13 @@ const FlashcardsPage = ({ setMobileOpen }) => {
                 <span className="text-indigo-300">{Math.round(progress)}%</span>
               </div>
               <div className="w-full bg-slate-800/80 rounded-full h-3 overflow-hidden shadow-inner border border-slate-700/50">
-  <div 
-    className="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 h-3 rounded-full transition-all duration-700 ease-out shadow-lg relative"
-    style={{ width: `${progress}%` }}
-  >
-    <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
-  </div>
-</div>
+                <div
+                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500 h-3 rounded-full transition-all duration-700 ease-out shadow-lg relative"
+                  style={{ width: `${progress}%` }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent rounded-full"></div>
+                </div>
+              </div>
             </div>
             <button
               onClick={() => setViewMode("decks")}
@@ -2493,52 +2493,53 @@ const FlashcardsPage = ({ setMobileOpen }) => {
               </button>
 
               <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-  <button
-    onClick={() => {
-      handleNextCard("right");
-    }}
-    className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-200 hover:bg-red-500/30 hover:border-red-400/60 hover:text-red-100 transition-all duration-200 shadow-lg font-medium"
-    disabled={!revealed}
-  >
-    <XIcon className="w-5 h-5 mr-2" />
-    <span>Didn't Know</span>
-  </button>
-  <button
-    onClick={() => {
-      handleNextCard("right");
-    }}
-    className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 hover:bg-emerald-500/30 hover:border-emerald-400/60 hover:text-emerald-100 transition-all duration-200 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-    disabled={!revealed}
-  >
-    <CheckIcon className="w-5 h-5 mr-2" />
-    <span>I Knew It</span>
-  </button>
-</div>
-
-{studySession.currentIndex === studySession.cards.length - 1 && revealed && (
-  <button              
+                <button
                   onClick={() => {
-                    setIsCompleted(true);
-                    addActivity("notes");
+                    handleNextCard("right");
                   }}
-                  className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400/50 text-white hover:from-indigo-600 hover:to-purple-700 hover:border-indigo-300/60 transition-all duration-200 shadow-xl font-bold"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-200 hover:bg-red-500/30 hover:border-red-400/60 hover:text-red-100 transition-all duration-200 shadow-lg font-medium"
+                  disabled={!revealed}
                 >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  Finish Session
+                  <XIcon className="w-5 h-5 mr-2" />
+                  <span>Didn't Know</span>
                 </button>
-              )}
+                <button
+                  onClick={() => {
+                    handleNextCard("right");
+                  }}
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-200 hover:bg-emerald-500/30 hover:border-emerald-400/60 hover:text-emerald-100 transition-all duration-200 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={!revealed}
+                >
+                  <CheckIcon className="w-5 h-5 mr-2" />
+                  <span>I Knew It</span>
+                </button>
+              </div>
+
+              {studySession.currentIndex === studySession.cards.length - 1 &&
+                revealed && (
+                  <button
+                    onClick={() => {
+                      setIsCompleted(true);
+                      addActivity("notes");
+                    }}
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400/50 text-white hover:from-indigo-600 hover:to-purple-700 hover:border-indigo-300/60 transition-all duration-200 shadow-xl font-bold"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Finish Session
+                  </button>
+                )}
             </div>
           </div>
         </div>
@@ -2811,13 +2812,13 @@ const Dashboard = ({ onSignOut }) => {
       />
       <main className="flex-1 lg:ml-68">
         <header className="sticky top-0 w-full bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 shadow-lg">
-  <div className="w-full px-3 sm:px-6 lg:px-12 py-3 sm:py-4 lg:py-6 flex items-center justify-between">
-    <div className="flex items-center space-x-2 sm:space-x-3">
-      <button
-        className="lg:hidden inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/10 text-white hover:bg-white/20 focus:outline-none transition-all"
-        onClick={() => setMobileOpen(!isMobileOpen)}
-        aria-label="Toggle Menu"
-      >
+          <div className="w-full px-3 sm:px-6 lg:px-12 py-3 sm:py-4 lg:py-6 flex items-center justify-between">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+              <button
+                className="lg:hidden inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-white/10 text-white hover:bg-white/20 focus:outline-none transition-all"
+                onClick={() => setMobileOpen(!isMobileOpen)}
+                aria-label="Toggle Menu"
+              >
                 {isMobileOpen ? (
                   <svg
                     className="w-5 h-5 sm:w-6 sm:h-6"
