@@ -55,7 +55,6 @@ const LandingPage = ({ onLogin }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
-    // const [verifySent, setVerifySent] = useState(false);
     const [authError, setAuthError] = useState('');
 
     const features = [
@@ -67,59 +66,17 @@ const LandingPage = ({ onLogin }) => {
         { name: "Today's Focus", desc: "A simple to-do list to keep track of your daily goals.", icon: "✅", gradient: "from-amber-500 to-orange-500" }
     ];
 
-    // const handleAuth = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const normalizedEmail = (email || '').trim().toLowerCase();
-    //         if (isSignup) {
-    //             await signUpWithEmail({ email: normalizedEmail, password, name });
-    //             setVerifySent(true);
-    //             setAuthError('');
-    //             // Do not auto-close or auto-login on signup; user may need to verify email
-    //         } else {
-    //             await signInWithEmail({ email: normalizedEmail, password });
-    //             setAuthError('');
-    //             setVerifySent(false);
-    //             onLogin();
-    //             setShowAuth(false);
-    //         }
-    //     } catch (err) {
-    //         const msg = (err?.message || '').toString();
-    //         if (msg.toLowerCase().includes('not found')) {
-    //             setAuthError('Email not found. Try signing up first or check the email.');
-    //         } else if (msg.toLowerCase().includes('email not confirmed')) {
-    //             setAuthError('Email not confirmed. Please verify your email or resend verification.');
-    //             setVerifySent(true);
-    //         } else {
-    //             setAuthError(msg || 'Authentication failed');
-    //         }
-    //     }
-    // };
-
-    // const handleResendVerification = async () => {
-    //     try {
-    //         await supabase.auth.resend({ type: 'signup', email });
-    //         setVerifySent(true);
-    //     } catch (err) {
-    //         setAuthError(err.message || 'Could not resend verification email');
-    //     }
-    // };
     const handleAuth = async (e) => {
         e.preventDefault();
         setAuthError('');
-        
-        console.log('🚀 Starting auth process...', { isSignup, email: email.trim() });
-        
+                
         try {
             const normalizedEmail = (email || '').trim().toLowerCase();
             
             if (isSignup) {
-                console.log('📝 Attempting sign-up...');
                 const signupResult = await signUpWithEmail({ email: normalizedEmail, password, name });
-                console.log('📝 Sign-up result:', signupResult);
                 
                 if (signupResult.error) {
-                    console.error('❌ Sign-up error:', signupResult.error);
                     if (signupResult.error.message?.toLowerCase().includes('already registered') || 
                         signupResult.error.message?.toLowerCase().includes('already exists')) {
                         setAuthError('Email already exists. Please sign in instead.');
@@ -129,38 +86,25 @@ const LandingPage = ({ onLogin }) => {
                     throw signupResult.error;
                 }
                 
-                console.log('✅ Sign-up successful, checking if email confirmation is needed...');
-                
-                // Check if user needs email confirmation
                 if (signupResult.data?.user && !signupResult.data.user.email_confirmed_at) {
-                    console.log('📧 Email confirmation required');
                     setAuthError('Account created! Please check your email and click the confirmation link, then sign in.');
                     setIsSignup(false);
                 } else {
-                    console.log('✅ No email confirmation needed, attempting auto sign-in...');
                     try {
                         const signInResult = await signInWithEmail({ email: normalizedEmail, password });
-                        console.log('🔑 Sign-in result:', signInResult);
                         
                         if (!signInResult.error && signInResult.data?.user) {
-                            console.log('✅ User authenticated, syncing data...');
-                            // Sync any existing localStorage data to Supabase on first signup
                             await syncLocalDataToSupabase(signInResult.data.user.id);
-                            console.log('✅ Data synced, logging in...');
                             onLogin();
                             setShowAuth(false);
                         }
                     } catch (signInError) {
-                        console.error('❌ Auto sign-in failed:', signInError);
                         setAuthError('Account created! Please check your email for confirmation, then sign in.');
                         setIsSignup(false);
                     }
                 }
             } else {
-                console.log('🔑 Attempting sign-in...');
                 const signInResult = await signInWithEmail({ email: normalizedEmail, password });
-                console.log('🔑 Sign-in result:', signInResult);
-                
                 if (signInResult.error) {
                     throw signInResult.error;
                 }
@@ -169,7 +113,6 @@ const LandingPage = ({ onLogin }) => {
                 setShowAuth(false);
             }
         } catch (err) {
-            console.error('❌ Auth error:', err);
             const msg = (err?.message || '').toString().toLowerCase();
             
             if (msg.includes('invalid login credentials') || msg.includes('invalid email or password')) {
@@ -185,15 +128,13 @@ const LandingPage = ({ onLogin }) => {
         }
     };
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-white relative overflow-hidden">
-            {/* Animated background elements */}
+        <div className="min-h-screen bg-slate-900 text-white relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-10 sm:top-20 left-2 sm:left-10 w-48 h-48 sm:w-72 sm:h-72 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
                 <div className="absolute top-20 sm:top-40 right-2 sm:right-10 w-48 h-48 sm:w-72 sm:h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
                 <div className="absolute -bottom-10 sm:-bottom-20 left-1/4 sm:left-1/3 w-48 h-48 sm:w-72 sm:h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
             </div>
 
-            {/* Navbar */}
             <nav className="relative z-10 px-3 sm:px-6 lg:px-12 py-4 sm:py-6 flex justify-between items-center backdrop-blur-sm bg-white/5 border-b border-white/10">
                 <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
@@ -207,14 +148,13 @@ const LandingPage = ({ onLogin }) => {
                 </div>
                 <button
                     onClick={() => setShowAuth(true)}
-                    className="bg-white/10 backdrop-blur-md text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-white/20 transition-all border border-white/20 font-medium text-xs sm:text-sm md:text-base"
+                    className="bg-white/5 backdrop-blur-md text-white px-3 sm:px-6 py-2 sm:py-3 rounded-xl hover:bg-white/10 transition-all border border-white/30 font-medium text-xs sm:text-sm md:text-base"
                 >
                     <span className="hidden xs:inline">Get Started</span>
                     <span className="xs:hidden">Start</span>
                 </button>
             </nav>
 
-            {/* Hero Section */}
             <main className="relative z-10 container mx-auto px-3 sm:px-6 lg:px-12 py-8 sm:py-12 md:py-20 lg:py-32">
                 <div className="text-center max-w-6xl mx-auto">
                     <div className="inline-block mb-3 sm:mb-4 md:mb-6 px-3 sm:px-4 py-1.5 sm:py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20">
@@ -233,22 +173,21 @@ const LandingPage = ({ onLogin }) => {
                     <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center items-center px-2 sm:px-4">
                         <button
                             onClick={() => { setIsSignup(true); setShowAuth(true); }}
-                            className="w-full xs:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105 shadow-2xl shadow-indigo-500/50"
+                            className="w-full xs:w-auto bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:from-indigo-700 hover:to-purple-700 transition-all transform hover:scale-105"
                         >
                             Start Free Today
                         </button>
                         <button
                             onClick={() => { setIsSignup(false); setShowAuth(true); }}
-                            className="w-full xs:w-auto bg-white/10 backdrop-blur-md text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:bg-white/20 transition-all border border-white/20"
+                            className="w-full xs:w-auto bg-blue-600 text-white font-bold py-3 sm:py-4 px-6 sm:px-8 rounded-xl text-sm sm:text-base md:text-lg hover:to-purple-700 transition-all transform hover:scale-105"
                         >
                             Sign In
                         </button>
                     </div>
 
-                    {/* Stats */}
                     <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-8 mt-8 sm:mt-12 md:mt-20 max-w-4xl mx-auto px-2 sm:px-4">
                         <div className="bg-white/5 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10">
-                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-400">25min</div>
+                            <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-yellow-200">25min</div>
                             <div className="text-xs sm:text-sm text-slate-400 mt-1 sm:mt-2">Avg Focus Time</div>
                         </div>
                         <div className="bg-white/5 backdrop-blur-md p-3 sm:p-4 md:p-6 rounded-2xl border border-white/10">
@@ -351,12 +290,6 @@ const LandingPage = ({ onLogin }) => {
                                 {isSignup ? 'Sign Up' : 'Sign In'}
                             </button>
                             {authError && <p className="text-xs text-red-400">{authError}</p>}
-                            {/* {isSignup && (
-                                <div className="text-xs text-slate-400">
-                                    {verifySent ? 'Verification email sent. Please check your inbox.' : 'Email verification may be required depending on project settings.'}
-                                    <button type="button" onClick={handleResendVerification} className="ml-2 text-indigo-300 hover:text-white">Resend</button>
-                                </div>
-                            )} */}
                         </form>
 
                         <div className="mt-6 text-center">
@@ -425,7 +358,6 @@ const addActivity = async (type) => {
     mockFirestore.activities[today].total++;
     saveToStorage();
     
-    // Trigger stats refresh for all HomePage components
     window.dispatchEvent(new CustomEvent('activityUpdated'));
     
     try {
@@ -462,8 +394,6 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
             <div className="space-y-1">{children}</div>
         </div>
     );
-
-    // Desktop Sidebar
     const SidebarBody = (
         <div className="mb-10 flex items-center px-2">
             <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
@@ -475,15 +405,14 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
             </div>
             <div className="ml-4">
                 <div className="font-bold text-white text-lg">StudyMentor</div>
-                <div className="text-slate-300 text-sm">Your Study Companion</div>
+                <div className="text-slate-300 text-xs">Your Study Companion</div>
             </div>
         </div>
     );
 
     return (
         <>
-            {/* Desktop (lg+) */}
-            <div className="hidden lg:flex w-72 h-screen bg-gradient-to-b from-slate-800/90 via-slate-700/90 to-slate-800/90 backdrop-blur-lg border-r border-white/20 p-6 flex-col fixed shadow-2xl">
+            <div className="hidden lg:flex w-68 h-screen bg-gray-900 border-r border-white/20 p-6 flex-col fixed shadow-2xl">
                 {SidebarBody}
                 <nav className="flex-1 overflow-y-auto">
                     <NavSection title="Dashboard">
@@ -504,11 +433,10 @@ const Sidebar = ({ currentPage, setPage, onSignOut, isMobileOpen, setMobileOpen 
                 </div>
             </div>
 
-            {/* Mobile Drawer */}
             {isMobileOpen && (
                 <div className="lg:hidden fixed inset-0 z-50">
                     <div className="absolute inset-0 bg-black/50" onClick={() => setMobileOpen(false)}></div>
-                    <div className="absolute left-0 top-0 bottom-0 w-72 bg-gradient-to-b from-slate-800/95 via-slate-700/95 to-slate-800/95 backdrop-blur-lg border-r border-white/20 p-6 flex flex-col shadow-2xl">
+                    <div className="absolute left-0 top-0 bottom-0 w-72 bg-slate-900 backdrop-blur-lg border-r border-white/20 p-6 flex flex-col shadow-2xl">
                         {SidebarBody}
                         <nav className="flex-1 overflow-y-auto">
                             <NavSection title="Dashboard">
@@ -738,7 +666,7 @@ const FocusList = () => {
         saveToStorage();
         setNewTaskText('');
         try { const user = await getCurrentUser(); if (user) await upsertTask(user.id, newTask); } catch {}
-        addActivity('notes'); // Track task creation activity
+        addActivity('notes'); 
     };
 
     const toggleTask = async (taskId) => {
@@ -812,9 +740,7 @@ const FocusList = () => {
     );
 };
 
-// --- [NEW HOMEPAGE - No Contribution Graph] ---
 const HomePage = () => {
-    // --- All existing state and data logic remains the same ---
     const [stats, setStats] = useState({ currentStreak: 0, totalDays: 0, bestStreak: 0, thisWeek: 0 });
 
     const refreshData = () => {
@@ -874,7 +800,6 @@ const HomePage = () => {
     const trophyIcon = <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M5 9V7C5 5.89543 5.89543 5 7 5H9C10.1046 5 11 5.89543 11 7V9C11 10.1046 10.1046 11 9 11H7C5.89543 11 5 10.1046 5 9ZM13 7C13 5.89543 13.8954 5 15 5H17C18.1046 5 19 5.89543 19 7V9C19 10.1046 18.1046 11 17 11H15C13.8954 11 13 10.1046 13 9V7Z"/></svg>;
     const weekIcon = <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17 3H21C21.5523 3 22 3.44772 22 4V20C22 20.5523 21.5523 21 21 21H3C2.44772 21 2 20.5523 2 20V4C2 3.44772 2.44772 3 3 3H7V1H9V3H15V1H17V3ZM4 9V19H20V9H4ZM6 13H8V11H6V13ZM11 11V13H13V11H11ZM16 11V13H18V11H16Z"/></svg>;
 
-    // --- NEW: Local components for styling this page ---
     const AnimatedBackground = () => (
         <div className="absolute inset-0 -z-10 overflow-hidden bg-slate-900">
             <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500 rounded-full filter blur-3xl opacity-30 animate-blob"></div>
@@ -1004,7 +929,6 @@ const NoteEditorPage = ({ note, onExit }) => {
             setSummary(summaryText || "Could not extract summary from response.");
 
         } catch (error) {
-            console.error("Summarization Error:", error);
             setSummary(`Error: ${error.message}`);
         } finally {
             setIsSummarizing(false);
@@ -1014,7 +938,7 @@ const NoteEditorPage = ({ note, onExit }) => {
     return (
         <div className="flex flex-col h-screen animate-fadeIn">
             <header className="flex-shrink-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 sticky top-0 shadow-lg">
-                <div className="px-4 sm:px-8 lg:px-12 py-4 sm:py-6 flex justify-between items-center">
+                <div className="px-4 sm:px-8 lg:px-12 py-4 sm:py-6 flex justify-between items-center bg-slate-900">
                     <div className="flex items-center space-x-4">
                         <button onClick={onExit} className="flex items-center px-4 py-2 rounded-xl bg-white/10 text-slate-300 hover:text-white hover:bg-white/20 transition-all border border-white/20">
                             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
@@ -1050,7 +974,7 @@ const NoteEditorPage = ({ note, onExit }) => {
                 </div>
             </header>
             
-            <main className="flex-1 overflow-y-auto bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900">
+            <main className="flex-1 overflow-y-auto bg-slate-800">
                 <div className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
                     <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Untitled Note" className="text-4xl font-bold text-white w-full focus:outline-none mb-4 bg-transparent placeholder-slate-400" />
                     <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="Start writing your notes here..." className="w-full min-h-[70vh] text-lg text-slate-200 leading-relaxed focus:outline-none resize-none bg-transparent placeholder-slate-400" />
@@ -1208,8 +1132,6 @@ const TimerPage = () => {
     const targetTimeRef = useRef(0);
     const audioRef = useRef(new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YV'));
 
-    // Removed auto-reset - users can manually reset when needed
-
     useEffect(() => {
         if (isActive && !isPaused) {
             intervalRef.current = setInterval(() => {
@@ -1266,7 +1188,6 @@ const TimerPage = () => {
     const handleStop = () => {
         setIsActive(false);
         setIsPaused(false);
-        // Don't reset the timer, just stop it
     };
 
     const handleReset = () => {
@@ -1501,7 +1422,6 @@ const AIAssistantPage = () => {
 
     const callGeminiAPI = async (prompt) => {
          if (!API_KEY) {
-             console.error("API Key not found.");
              return "Error: API Key not configured.";
          }
          setIsLoading(true);
@@ -1519,19 +1439,16 @@ const AIAssistantPage = () => {
             });
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("API Error:", errorData);
                 throw new Error(errorData.error?.message || `HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
              const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
              if (!text) {
-                 console.warn("API response structure unexpected:", data);
                  return "Sorry, I received an unexpected response.";
              }
              return text;
 
         } catch (error) {
-            console.error("Fetch/API Error:", error);
             return `Sorry, there was an error: ${error.message}`;
         } finally {
             setIsLoading(false);
@@ -1568,8 +1485,7 @@ const AIAssistantPage = () => {
                 <div className="rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10 h-[70vh] sm:h-[75vh] flex flex-col">
                     <div className="p-6 border-b border-white/10">
                         <h2 className="text-2xl font-bold text-white flex items-center">
-                            <AIIcon className="mr-2"/> 
-                            AI Study Assistant
+                              AI Study Assistant
                         </h2>
                         <p className="text-slate-300">Get help with your studies, explanations, and learning strategies</p>
                     </div>
@@ -1642,7 +1558,7 @@ const FlashcardsPage = () => {
     const [cardBack, setCardBack] = useState('');
     const newDeckInputRef = useRef(null);
     
-    const [viewMode, setViewMode] = useState('decks'); // 'decks', 'cards', 'study'
+    const [viewMode, setViewMode] = useState('decks'); 
     const [studySession, setStudySession] = useState({ cards: [], currentIndex: 0, isFlipped: false, animateOut: null });
     const [studyDeckName, setStudyDeckName] = useState('');
     const [revealed, setRevealed] = useState(false);
@@ -1678,7 +1594,7 @@ const FlashcardsPage = () => {
         setDecks(updatedDecks); 
         setNewDeckName(''); 
         try { const user = await getCurrentUser(); if (user) await upsertDeck(user.id, newDeck); } catch {} 
-        addActivity('notes'); // Track deck creation activity
+        addActivity('notes'); 
     };
     const deleteDeck = async (deckId) => { if (window.confirm("Delete this deck and all its cards?")) { const updatedDecks = decks.filter(deck => deck.id !== deckId); mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); if (selectedDeck?.id === deckId) { setSelectedDeck(null); setViewMode('decks'); } try { const user = await getCurrentUser(); if (user) await deleteDeckRow(user.id, deckId); } catch {} } };
     const addCard = async (e) => { 
@@ -1698,8 +1614,8 @@ const FlashcardsPage = () => {
         setSelectedDeck(updatedDecks.find(d => d.id === selectedDeck.id)); 
         setCardFront(''); 
         setCardBack(''); 
-        try { const user = await getCurrentUser(); if (user) await upsertCard(user.id, { id: newCard.id, deckId: selectedDeck.id, front: newCard.front, back: newCard.back, created_at: newCard.created_at }); } catch {} 
-        addActivity('notes'); // Track card creation activity
+        try { const user = await getCurrentUser(); if (user) await upsertCard(user.id, { id: newCard.id, deckId: selectedDeck.id, front: newCard.front, back: newCard.back, created_at: newCard.created_at }); } catch{} 
+        addActivity('notes');
     };
     const deleteCard = async (cardId) => { if (!selectedDeck) return; if (window.confirm("Delete this card?")) { const updatedDecks = decks.map(deck => { if (deck.id === selectedDeck.id) { const updatedCards = (deck.cards || []).filter(card => card.id !== cardId); return { ...deck, cards: updatedCards }; } return deck; }); mockFirestore.decks = updatedDecks; saveToStorage(); setDecks(updatedDecks); setSelectedDeck(updatedDecks.find(d => d.id === selectedDeck.id)); try { const user = await getCurrentUser(); if (user) await deleteCardRow(user.id, cardId); } catch {} } };
 
@@ -1765,7 +1681,7 @@ const FlashcardsPage = () => {
 
         return (
             <div className="fixed inset-0 flex flex-col animate-fade-in">
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950" />
+                <div className="absolute inset-0 bg-pruple-900" />
                 <AnimatedBackground />
 
                 {/* Minimal Header - Just Progress and Exit */}
@@ -1788,7 +1704,6 @@ const FlashcardsPage = () => {
                             </div>
                         </div>
                         
-                        {/* Exit Button */}
                         <button onClick={() => setViewMode('decks')} className="inline-flex items-center px-4 py-2 rounded-xl bg-white/10 text-slate-200 hover:bg-white/20 hover:text-white transition-all duration-200 border border-white/20">
                             <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             <span className="font-medium">Exit Study</span>
@@ -1796,7 +1711,6 @@ const FlashcardsPage = () => {
                     </div>
                 </div>
 
-                {/* Card - Consistent Width */}
                 <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 py-6">
                     <div className="w-full">
                         <div className={`${cardAnimationClass}`}>
@@ -1837,17 +1751,14 @@ const FlashcardsPage = () => {
                     </div>
                 </div>
 
-                {/* Actions - Consistent Width */}
                 <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-6">
                     <div className="w-full">
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-                            {/* Previous Button */}
                             <button onClick={handlePrevCard} className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-slate-200 hover:bg-white/20 hover:text-white transition-all duration-200 shadow-lg">
                                 <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7"/></svg>
                                 <span className="font-medium">Previous</span>
                             </button>
 
-                            {/* Action Buttons */}
                             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
                                 <button onClick={() => handleNextCard('left')} className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-4 rounded-xl bg-red-500/20 border border-red-500/40 text-red-200 hover:bg-red-500/30 hover:border-red-400/60 hover:text-red-100 transition-all duration-200 shadow-lg font-medium">
                                     <XIcon className="w-5 h-5 mr-2"/> 
@@ -1859,7 +1770,6 @@ const FlashcardsPage = () => {
                                 </button>
                             </div>
 
-                            {/* Finish Session Button */}
                             {studySession.currentIndex === (studySession.cards.length - 1) && (
                                 <button onClick={() => { setIsCompleted(true); addActivity('notes'); }} className="w-full sm:w-auto inline-flex items-center justify-center px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 border border-indigo-400/50 text-white hover:from-indigo-600 hover:to-purple-700 hover:border-indigo-300/60 transition-all duration-200 shadow-xl font-bold">
                                     <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1936,7 +1846,7 @@ const FlashcardsPage = () => {
                     </div>
                  ) : (
                      <div className="text-center py-16 rounded-2xl border border-dashed border-white/20 bg-white/5 backdrop-blur-md">
-                        <FlashcardIcon className="w-12 h-12 text-slate-300 mx-auto mb-4"/>
+                        {/* <FlashcardIcon className="w-12 h-12 text-slate-300 mx-auto mb-4"/> */}
                         <h3 className="text-xl font-semibold text-white mb-2">No decks yet</h3>
                         <p className="text-slate-300 mb-4">Create your first deck to start studying.</p>
                         <button onClick={() => newDeckInputRef.current?.focus()} className="inline-flex items-center px-5 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-medium hover:from-indigo-600 hover:to-purple-700 shadow transition">
@@ -1951,13 +1861,11 @@ const FlashcardsPage = () => {
 
 const Dashboard = ({ onSignOut }) => {
     const [currentPage, setCurrentPage] = useState(() => {
-        // Get the last visited page from localStorage, default to 'home'
         return localStorage.getItem('studyMentorCurrentPage') || 'home';
     });
     const [editingNote, setEditingNote] = useState(null);
     const [isMobileOpen, setMobileOpen] = useState(false);
 
-    // Save current page to localStorage whenever it changes
     useEffect(() => {
         localStorage.setItem('studyMentorCurrentPage', currentPage);
     }, [currentPage]);
@@ -1986,9 +1894,9 @@ const Dashboard = ({ onSignOut }) => {
     }
     
     return (
-        <div className="flex min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900">
+        <div className="flex min-h-screen bg-slate-900">
             <Sidebar currentPage={currentPage} setPage={setCurrentPage} onSignOut={onSignOut} isMobileOpen={isMobileOpen} setMobileOpen={setMobileOpen} />
-            <main className="flex-1 lg:ml-72">
+            <main className="flex-1 lg:ml-68">
                 <header className={`sticky top-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 shadow-lg ${currentPage === 'flashcards' ? 'hidden' : ''}`}>
                     <div className="px-4 sm:px-8 lg:px-12 py-4 sm:py-6 flex items-center justify-between">
                         <div className="flex items-center space-x-3">
@@ -2028,17 +1936,14 @@ export default function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isLoadingData, setIsLoadingData] = useState(false);
 
-    // Handle auth callback for email verification
     useEffect(() => {
         const handleAuthCallback = async () => {
-            const { data, error } = await supabase.auth.getSession();
+            const { data } = await supabase.auth.getSession();
             if (data.session) {
                 console.log('✅ Email verification successful');
-                // The session will be handled by the main auth listener below
             }
         };
         
-        // Check if we're on the auth callback route
         if (window.location.pathname === '/auth/callback') {
             handleAuthCallback();
         }
@@ -2047,7 +1952,6 @@ export default function App() {
     useEffect(() => {
         const sub = onAuthChange(async (user) => {
             if (user) {
-                // Only load data if we don't have it already or if it's the first login
                 const hasData = localStorage.getItem('studyNotes') && 
                                localStorage.getItem('studyTasks') && 
                                localStorage.getItem('flashcardDecks');
@@ -2055,16 +1959,13 @@ export default function App() {
                 if (!hasData) {
                     setIsLoadingData(true);
                     
-                    // Load data from Supabase when user logs in
                     await loadDataFromSupabase(user.id);
                     
-                    // Sync any existing localStorage data to Supabase (for data created before the fix)
                     await syncLocalDataToSupabase(user.id);
                     
                     setIsLoadingData(false);
                 }
                 
-                // Always update mockFirestore from localStorage (lightweight operation)
                 mockFirestore.notes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
                 mockFirestore.tasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
                 mockFirestore.decks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
@@ -2079,7 +1980,6 @@ export default function App() {
         (async () => {
             const user = await getCurrentUser();
             if (user) {
-                // Only load data if we don't have it already
                 const hasData = localStorage.getItem('studyNotes') && 
                                localStorage.getItem('studyTasks') && 
                                localStorage.getItem('flashcardDecks');
@@ -2108,7 +2008,7 @@ export default function App() {
 
     if (isLoadingData) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 flex items-center justify-center">
+            <div className="min-h-screen bg-slate-900 flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
                     <p className="text-white text-lg">Loading your data...</p>

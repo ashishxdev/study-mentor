@@ -1,13 +1,10 @@
 import { supabase } from './supabaseClient';
 
-// Auth - Simplified without email verification
 export async function signUpWithEmail({ email, password, name }) {
     console.log('🔧 signUpWithEmail called with:', { email, name: name ? 'provided' : 'not provided' });
     
-    // Get the current domain for email redirect
     const currentDomain = window.location.origin;
     
-    // For production, use your Vercel URL directly
     const redirectUrl = currentDomain.includes('localhost') 
         ? `${currentDomain}/auth/callback`
         : `https://testing-six-topaz-75.vercel.app/auth/callback`;
@@ -23,7 +20,6 @@ export async function signUpWithEmail({ email, password, name }) {
     
     console.log('🔧 Supabase signUp response:', { data, error });
     
-    // Return both data and error so we can check them
     return { data, error };
 }
 
@@ -37,7 +33,6 @@ export async function signInWithEmail({ email, password }) {
     
     console.log('🔧 Supabase signIn response:', { data, error });
     
-    // Return both data and error
     return { data, error };
 }
 
@@ -52,7 +47,6 @@ export async function getCurrentUser() {
     return user;
 }
 
-// CRUD helpers (all rows scoped by user_id)
 export async function fetchNotes(userId) {
     const { data, error } = await supabase.from('notes').select('*').eq('user_id', userId).order('timestamp', { ascending: false });
     if (error) throw error;
@@ -135,27 +129,22 @@ export async function fetchActivities(userId) {
     return map;
 }
 
-// Sync all localStorage data to Supabase
 export async function syncLocalDataToSupabase(userId) {
     try {
-        // Sync Notes
         const localNotes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
         for (const note of localNotes) {
             await upsertNote(userId, note);
         }
 
-        // Sync Tasks
         const localTasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
         for (const task of localTasks) {
             await upsertTask(userId, task);
         }
 
-        // Sync Decks and Cards
         const localDecks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
         for (const deck of localDecks) {
             await upsertDeck(userId, { id: deck.id, name: deck.name, created_at: new Date().toISOString() });
             
-            // Sync cards for this deck
             if (deck.cards && deck.cards.length > 0) {
                 for (const card of deck.cards) {
                     await upsertCard(userId, {
@@ -169,7 +158,6 @@ export async function syncLocalDataToSupabase(userId) {
             }
         }
 
-        // Sync Activities
         const localActivities = JSON.parse(localStorage.getItem('studyActivities') || '{}');
         for (const [date, activity] of Object.entries(localActivities)) {
             await upsertActivity(userId, date, {
@@ -187,21 +175,16 @@ export async function syncLocalDataToSupabase(userId) {
     }
 }
 
-// Load all data from Supabase to localStorage
 export async function loadDataFromSupabase(userId) {
     try {
-        // Load Notes
         const notes = await fetchNotes(userId);
         localStorage.setItem('studyNotes', JSON.stringify(notes));
 
-        // Load Tasks
         const tasks = await fetchTasks(userId);
         localStorage.setItem('studyTasks', JSON.stringify(tasks));
 
-        // Load Decks
         const decks = await fetchDecks(userId);
         
-        // Load cards for each deck
         const decksWithCards = await Promise.all(
             decks.map(async (deck) => {
                 const cards = await fetchCards(userId, deck.id);
@@ -210,7 +193,6 @@ export async function loadDataFromSupabase(userId) {
         );
         localStorage.setItem('flashcardDecks', JSON.stringify(decksWithCards));
 
-        // Load Activities
         const activities = await fetchActivities(userId);
         localStorage.setItem('studyActivities', JSON.stringify(activities));
 
