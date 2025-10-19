@@ -1551,6 +1551,13 @@ const TimerPage = () => {
   );
 
   useEffect(() => {
+    if (!isActive) {
+      setMinutes(mode === "focus" ? focusDuration : breakDuration);
+      setSeconds(0);
+    }
+  }, [focusDuration, breakDuration, mode]);
+
+  useEffect(() => {
     if (isActive && !isPaused) {
       intervalRef.current = setInterval(() => {
         const remaining = targetTimeRef.current - Date.now();
@@ -1584,7 +1591,8 @@ const TimerPage = () => {
 
   const handleStart = () => {
     const currentTimeSeconds = minutes * 60 + seconds;
-    targetTimeRef.current = Date.now() + currentTimeSeconds * 1000;
+    targetTimeRef.current =
+      Math.ceil(Date.now() / 1000) * 1000 + currentTimeSeconds * 1000;
     setIsActive(true);
     setIsPaused(false);
   };
@@ -2350,17 +2358,19 @@ const FlashcardsPage = ({ setMobileOpen }) => {
     }
 
     return (
-      <div className="fixed inset-0 flex flex-col animate-fade-in">
-        <div className="absolute inset-0 bg-pruple-900" />
-        <AnimatedBackground />
+      <div className="min-h-screen flex flex-col animate-fade-in overflow-y-auto">
+        <div className="absolute inset-0 bg-purple-900 -z-20" />
+        <div className="absolute inset-0 -z-10">
+          <AnimatedBackground />
+        </div>
 
-        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center">
+        <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 py-6 flex-shrink-0">
+          <div className="text-center max-w-5xl mx-auto">
+            {" "}
             <div className="text-lg text-slate-300 mb-4">
               {studyDeckName || "Study Session"} • Card{" "}
               {studySession.currentIndex + 1} of {studySession.cards.length}
             </div>
-
             <div className="max-w-md mx-auto mb-4">
               <div className="flex justify-between text-sm font-medium text-slate-300 mb-2">
                 <span>Progress</span>
@@ -2372,7 +2382,6 @@ const FlashcardsPage = ({ setMobileOpen }) => {
                 </div>
               </div>
             </div>
-
             <button
               onClick={() => setViewMode("decks")}
               className="inline-flex items-center px-4 py-2 rounded-xl bg-white/10 text-slate-200 hover:bg-white/20 hover:text-white transition-all duration-200 border border-white/20"
