@@ -20,3 +20,11 @@ export const supabase = createClient(finalUrl, finalKey, {
         detectSessionInUrl: true,
     },
 });
+
+supabase.auth.signInWithOAuth({
+  provider: 'google',
+  options: {
+    redirectTo: 'https://testing-six-topaz-75.vercel.app/'
+  }
+});
+
