@@ -1455,58 +1455,59 @@ const NotesPage = ({ onSelectNote }) => {
   };
 
   return (
-    <div className="space-y-8 animate-fadeIn">
+    <div className="space-y-6 sm:space-y-8 animate-fadeIn px-4 sm:px-0">
       <div className="p-4 sm:p-6 rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10">
         <form
           onSubmit={handleCreateNote}
-          className="flex flex-col sm:flex-row gap-4"
+          className="flex flex-col sm:flex-row gap-3 sm:gap-4"
         >
           <input
             type="text"
             placeholder="Create a new note (e.g., 'React Hooks Summary')"
             value={newTitle}
             onChange={(e) => setNewTitle(e.target.value)}
-            className="flex-1 p-4 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+            className="flex-1 p-3 sm:p-4 bg-white/10 border border-white/10 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm sm:text-base"
           />
           <button
             type="submit"
-            className="w-full sm:w-auto flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-xl hover:from-indigo-600 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all font-medium"
+            className="w-full sm:w-auto flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 sm:px-6 py-3 sm:py-4 rounded-xl hover:from-indigo-600 hover:to-purple-700 shadow-lg transform hover:scale-105 transition-all font-medium text-sm sm:text-base"
           >
-            <PlusIcon /> Create
+            <PlusIcon className="w-5 h-5" />
+            <span className="ml-2">Create</span>
           </button>
         </form>
       </div>
 
       <div>
         {notes.length > 0 ? (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {notes.map((note) => (
               <div
                 key={note.id}
                 onClick={() => onSelectNote(note)}
-                className="rounded-2xl shadow-xl p-6 transition-all hover:shadow-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 cursor-pointer"
+                className="rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 transition-all hover:shadow-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 cursor-pointer"
               >
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-2xl font-bold text-white">
+                <div className="flex justify-between items-start gap-3 mb-2">
+                  <h3 className="text-lg sm:text-2xl font-bold text-white break-words flex-1">
                     {note.title || "Untitled"}
                   </h3>
                   <button
                     onClick={(e) => handleDeleteNote(e, note.id)}
-                    className="p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all z-10"
+                    className="p-2 sm:p-3 rounded-lg sm:rounded-xl text-red-400 hover:bg-red-500/10 transition-all z-10 flex-shrink-0"
                     aria-label="Delete Note"
                   >
-                    <DeleteIcon className="w-5 h-5" />
+                    <DeleteIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
-                <div className="mt-4 text-sm text-slate-300">
+                <div className="mt-2 sm:mt-4 text-xs sm:text-sm text-slate-300">
                   Last edited: {new Date(note.timestamp).toLocaleDateString()}
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10 flex flex-col items-center">
-            <div className="mb-4 text-slate-300 w-16 h-16">
+          <div className="text-center py-12 sm:py-20 rounded-xl sm:rounded-2xl shadow-xl bg-white/5 backdrop-blur-md border border-white/10 flex flex-col items-center px-4">
+            <div className="mb-3 sm:mb-4 text-slate-300 w-12 h-12 sm:w-16 sm:h-16">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -1522,10 +1523,10 @@ const NotesPage = ({ onSelectNote }) => {
                 />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">
+            <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
               No notes yet
             </h3>
-            <p className="text-slate-300">
+            <p className="text-sm sm:text-base text-slate-300">
               Create your first note to get started!
             </p>
           </div>
