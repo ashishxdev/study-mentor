@@ -170,12 +170,9 @@ export async function syncLocalDataToSupabase(userId) {
 export async function loadDataFromSupabase(userId) {
     try {
         const notes = await fetchNotes(userId);
-        localStorage.setItem('studyNotes', JSON.stringify(notes));
-
         const tasks = await fetchTasks(userId);
-        localStorage.setItem('studyTasks', JSON.stringify(tasks));
-
         const decks = await fetchDecks(userId);
+        const activities = await fetchActivities(userId);
         
         const decksWithCards = await Promise.all(
             decks.map(async (deck) => {
@@ -183,13 +180,44 @@ export async function loadDataFromSupabase(userId) {
                 return { ...deck, cards };
             })
         );
-        localStorage.setItem('flashcardDecks', JSON.stringify(decksWithCards));
 
-        const activities = await fetchActivities(userId);
-        localStorage.setItem('studyActivities', JSON.stringify(activities));
+        const localNotes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
+        const localTasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
+        const localDecks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
+        const localActivities = JSON.parse(localStorage.getItem('studyActivities') || '{}');
+
+        const mergedNotes = [...notes];
+        const noteIds = new Set(notes.map(n => n.id));
+        localNotes.forEach(note => {
+            if (!noteIds.has(note.id)) {
+                mergedNotes.push(note);
+            }
+        });
+
+        const mergedTasks = [...tasks];
+        const taskIds = new Set(tasks.map(t => t.id));
+        localTasks.forEach(task => {
+            if (!taskIds.has(task.id)) {
+                mergedTasks.push(task);
+            }
+        });
+
+        const mergedDecks = [...decksWithCards];
+        const deckIds = new Set(decksWithCards.map(d => d.id));
+        localDecks.forEach(deck => {
+            if (!deckIds.has(deck.id)) {
+                mergedDecks.push(deck);
+            }
+        });
+        const mergedActivities = { ...localActivities, ...activities };
+        localStorage.setItem('studyNotes', JSON.stringify(mergedNotes));
+        localStorage.setItem('studyTasks', JSON.stringify(mergedTasks));
+        localStorage.setItem('flashcardDecks', JSON.stringify(mergedDecks));
+        localStorage.setItem('studyActivities', JSON.stringify(mergedActivities));
 
         return true;
-    } catch {
+    } catch (error) {
+        console.error('Load from Supabase failed:', error);
         return false;
     }
 }

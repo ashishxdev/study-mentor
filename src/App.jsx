@@ -2918,74 +2918,56 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    const sub = onAuthChange(async (user) => {
-      if (user) {
-        const hasData =
-          localStorage.getItem("studyNotes") &&
-          localStorage.getItem("studyTasks") &&
-          localStorage.getItem("flashcardDecks");
+  const sub = onAuthChange(async (user) => {
+    if (user) {
+      setIsLoadingData(true);
+      await loadDataFromSupabase(user.id);
+      await syncLocalDataToSupabase(user.id);
 
-        if (!hasData) {
-          setIsLoadingData(true);
+      mockFirestore.notes = JSON.parse(
+        localStorage.getItem("studyNotes") || "[]"
+      );
+      mockFirestore.tasks = JSON.parse(
+        localStorage.getItem("studyTasks") || "[]"
+      );
+      mockFirestore.decks = JSON.parse(
+        localStorage.getItem("flashcardDecks") || "[]"
+      );
+      mockFirestore.activities = JSON.parse(
+        localStorage.getItem("studyActivities") || "{}"
+      );
 
-          await loadDataFromSupabase(user.id);
-
-          await syncLocalDataToSupabase(user.id);
-
-          setIsLoadingData(false);
-        }
-
-        mockFirestore.notes = JSON.parse(
-          localStorage.getItem("studyNotes") || "[]"
-        );
-        mockFirestore.tasks = JSON.parse(
-          localStorage.getItem("studyTasks") || "[]"
-        );
-        mockFirestore.decks = JSON.parse(
-          localStorage.getItem("flashcardDecks") || "[]"
-        );
-        mockFirestore.activities = JSON.parse(
-          localStorage.getItem("studyActivities") || "{}"
-        );
-
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
+      setIsLoadingData(false);
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  });
 
     (async () => {
-      const user = await getCurrentUser();
-      if (user) {
-        const hasData =
-          localStorage.getItem("studyNotes") &&
-          localStorage.getItem("studyTasks") &&
-          localStorage.getItem("flashcardDecks");
+  const user = await getCurrentUser();
+  if (user) {
+    setIsLoadingData(true);
+    await loadDataFromSupabase(user.id);
+    await syncLocalDataToSupabase(user.id);
 
-        if (!hasData) {
-          setIsLoadingData(true);
-          await loadDataFromSupabase(user.id);
+    mockFirestore.notes = JSON.parse(
+      localStorage.getItem("studyNotes") || "[]"
+    );
+    mockFirestore.tasks = JSON.parse(
+      localStorage.getItem("studyTasks") || "[]"
+    );
+    mockFirestore.decks = JSON.parse(
+      localStorage.getItem("flashcardDecks") || "[]"
+    );
+    mockFirestore.activities = JSON.parse(
+      localStorage.getItem("studyActivities") || "{}"
+    );
 
-          await syncLocalDataToSupabase(user.id);
-          setIsLoadingData(false);
-        }
-
-        mockFirestore.notes = JSON.parse(
-          localStorage.getItem("studyNotes") || "[]"
-        );
-        mockFirestore.tasks = JSON.parse(
-          localStorage.getItem("studyTasks") || "[]"
-        );
-        mockFirestore.decks = JSON.parse(
-          localStorage.getItem("flashcardDecks") || "[]"
-        );
-        mockFirestore.activities = JSON.parse(
-          localStorage.getItem("studyActivities") || "{}"
-        );
-
-        setIsLoggedIn(true);
-      }
-    })();
+    setIsLoadingData(false);
+    setIsLoggedIn(true);
+  }
+})();
 
     return () => sub?.data?.subscription?.unsubscribe?.();
   }, []);
