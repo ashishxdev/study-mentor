@@ -39,7 +39,6 @@ const AlignLeftIcon = () => (
     />
   </IconBase>
 );
-const API_KEY = null;
 const CheckIcon = () => (
   <IconBase>
     <path
@@ -1176,11 +1175,11 @@ const NoteEditorPage = ({ note, onExit }) => {
 
   const [summary, setSummary] = useState(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
-  // const API_KEY = (
-  //   import.meta.env.VITE_GEMINI_API_KEY ||
-  //   import.meta.env.REACT_APP_GEMINI_API_KEY ||
-  //   ""
-  // ).trim();
+  const API_KEY = (
+    import.meta.env.VITE_GEMINI_API_KEY ||
+    import.meta.env.REACT_APP_GEMINI_API_KEY ||
+    ""
+  ).trim();
 
   useEffect(() => {
     if (
@@ -1223,83 +1222,48 @@ const NoteEditorPage = ({ note, onExit }) => {
     return () => clearTimeout(handler);
   }, [content, title, currentNoteData]);
 
-  // const handleSummarize = async () => {
-  //   if (!content.trim() || isSummarizing) return;
+  const handleSummarize = async () => {
+    if (!content.trim() || isSummarizing) return;
 
-  //   if (!API_KEY) {
-  //     setSummary(
-  //       "Error: Gemini API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables."
-  //     );
-  //     return;
-  //   }
-
-  //   setIsSummarizing(true);
-  //   setSummary("Generating summary...");
-
-  //   const prompt =
-  //     "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
-  //     content;
-  //   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-
-  //   try {
-  //     const response = await fetch(API_URL, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(
-  //         errorData.error?.message || "Failed to generate summary."
-  //       );
-  //     }
-
-  //     const data = await response.json();
-  //     const summaryText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-  //     setSummary(summaryText || "Could not extract summary from response.");
-  //   } catch (error) {
-  //     setSummary(`Error: ${error.message}`);
-  //   } finally {
-  //     setIsSummarizing(false);
-  //   }
-  // };
-
-  // REPLACE your old handleSummarize with this new one
-
-const handleSummarize = async () => {
-  if (!content.trim() || isSummarizing) return;
-
-  setIsSummarizing(true);
-  setSummary("Generating summary...");
-
-  const prompt =
-    "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
-    content;
-
-  try {
-    // Call our new /api/summarize backend
-    const response = await fetch('/api/summarize', {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: prompt }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "Failed to generate summary.");
+    if (!API_KEY) {
+      setSummary(
+        "Error: Gemini API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables."
+      );
+      return;
     }
 
-    const summaryText = data.text;
-    setSummary(summaryText || "Could not extract summary from response.");
+    setIsSummarizing(true);
+    setSummary("Generating summary...");
 
-  } catch (error) {
-    setSummary(`Error: ${error.message}`);
-  } finally {
-    setIsSummarizing(false);
-  }
-};
+    const prompt =
+      "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
+      content;
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error?.message || "Failed to generate summary."
+        );
+      }
+
+      const data = await response.json();
+      const summaryText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      setSummary(summaryText || "Could not extract summary from response.");
+    } catch (error) {
+      setSummary(`Error: ${error.message}`);
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
   return (
     <div className="flex flex-col h-screen animate-fadeIn">
       <header className="flex-shrink-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 sticky top-0 shadow-lg">
@@ -1349,24 +1313,13 @@ const handleSummarize = async () => {
               className="flex items-center px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-indigo-500/30"
             >
               <AlignLeftIcon className="w-5 h-5 mr-2" />
-              {/* <span className="hidden sm:inline">
+              <span className="hidden sm:inline">
                 {isSummarizing
                   ? "Summarizing..."
                   : !API_KEY
                   ? "Summarize (API Key Required)"
                   : "Summarize"}
-              </span> */}
-              <button
-  onClick={handleSummarize}
-  disabled={!content.trim() || isSummarizing}
-  className="flex items-center px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-indigo-500/30"
->
-  <AlignLeftIcon className="w-5 h-5 mr-2" />
-  <span className="hidden sm:inline">
-    {isSummarizing ? "Summarizing..." : "Summarize"}
-  </span>
-  <span className="sm:hidden">{isSummarizing ? "..." : "AI"}</span>
-</button>
+              </span>
               <span className="sm:hidden">{isSummarizing ? "..." : "AI"}</span>
             </button>
             <div className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">
@@ -1972,11 +1925,11 @@ const AIAssistantPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
 
-  // const API_KEY = (
-  //   import.meta.env.VITE_GEMINI_API_KEY ||
-  //   import.meta.env.REACT_APP_GEMINI_API_KEY ||
-  //   ""
-  // ).trim();
+  const API_KEY = (
+    import.meta.env.VITE_GEMINI_API_KEY ||
+    import.meta.env.REACT_APP_GEMINI_API_KEY ||
+    ""
+  ).trim();
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -1984,73 +1937,41 @@ const AIAssistantPage = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  // const callGeminiAPI = async (prompt) => {
-  //   if (!API_KEY) {
-  //     return "Error: API Key not configured.";
-  //   }
-  //   setIsLoading(true);
-
-  //   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
-  //   const payload = {
-  //     contents: [{ parts: [{ text: prompt }] }],
-  //   };
-
-  //   try {
-  //     const response = await fetch(API_URL, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(payload),
-  //     });
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(
-  //         errorData.error?.message || `HTTP error! status: ${response.status}`
-  //       );
-  //     }
-  //     const data = await response.json();
-  //     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-  //     if (!text) {
-  //       return "Sorry, I received an unexpected response.";
-  //     }
-  //     return text;
-  //   } catch (error) {
-  //     return `Sorry, there was an error: ${error.message}`;
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
-  // REPLACE your old callGeminiAPI with this new one
-
-const callGeminiAPI = async (prompt) => {
-  setIsLoading(true);
-
-  try {
-    // Call our OWN backend API at /api/chat
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ prompt: prompt }), // Send the prompt in the body
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // This will show errors from our backend
-      throw new Error(data.error || 'Failed to get response from server.');
+  const callGeminiAPI = async (prompt) => {
+    if (!API_KEY) {
+      return "Error: API Key not configured.";
     }
+    setIsLoading(true);
 
-    return data.text || "Sorry, I received an empty response.";
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
+    const payload = {
+      contents: [{ parts: [{ text: prompt }] }],
+    };
 
-  } catch (error) {
-    // This will now show your backend's errors
-    return `Sorry, there was an error: ${error.message}`;
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error?.message || `HTTP error! status: ${response.status}`
+        );
+      }
+      const data = await response.json();
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        return "Sorry, I received an unexpected response.";
+      }
+      return text;
+    } catch (error) {
+      return `Sorry, there was an error: ${error.message}`;
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -2151,34 +2072,25 @@ const callGeminiAPI = async (prompt) => {
               />
               <button
                 type="submit"
-                // disabled={isLoading || !input.trim() || !API_KEY}
-                disabled={isLoading || !input.trim()}
+                disabled={isLoading || !input.trim() || !API_KEY}
                 className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-xl hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-105 transition-all font-medium"
               >
                 Send
               </button>
             </div>
-            {/* {!API_KEY && (
+            {!API_KEY && (
               <p className="text-xs text-amber-300 mt-2">
                 AI Assistant is disabled for security. The Gemini API key should
                 not be exposed publicly in production.
               </p>
-            )} */}
-            // REPLACE IT WITH THIS
-
-{!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY) && (
-  <p className="text-xs text-amber-300 mt-2">
-    AI Assistant is disabled. Backend services are not fully configured.
-  </p>
-)}
+            )}
           </form>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4 sm:px-0">
           <button
             onClick={() => quickActionHandler("Give me study tips")}
             className="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
-            // disabled={isLoading || !API_KEY}
-            disabled={isLoading}
+            disabled={isLoading || !API_KEY}
           >
             <h3 className="font-semibold text-white mb-2">📚 Study Tips</h3>
             <p className="text-sm text-slate-300">
