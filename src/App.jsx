@@ -39,6 +39,7 @@ const AlignLeftIcon = () => (
     />
   </IconBase>
 );
+const API_KEY = null;
 const CheckIcon = () => (
   <IconBase>
     <path
