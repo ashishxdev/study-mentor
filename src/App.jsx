@@ -1175,11 +1175,11 @@ const NoteEditorPage = ({ note, onExit }) => {
 
   const [summary, setSummary] = useState(null);
   const [isSummarizing, setIsSummarizing] = useState(false);
-  const API_KEY = (
-    import.meta.env.VITE_GEMINI_API_KEY ||
-    import.meta.env.REACT_APP_GEMINI_API_KEY ||
-    ""
-  ).trim();
+  // const API_KEY = (
+  //   import.meta.env.VITE_GEMINI_API_KEY ||
+  //   import.meta.env.REACT_APP_GEMINI_API_KEY ||
+  //   ""
+  // ).trim();
 
   useEffect(() => {
     if (
@@ -1222,48 +1222,85 @@ const NoteEditorPage = ({ note, onExit }) => {
     return () => clearTimeout(handler);
   }, [content, title, currentNoteData]);
 
-  const handleSummarize = async () => {
-    if (!content.trim() || isSummarizing) return;
+  // const handleSummarize = async () => {
+  //   if (!content.trim() || isSummarizing) return;
 
-    if (!API_KEY) {
-      setSummary(
-        "Error: Gemini API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables."
-      );
-      return;
+  //   if (!API_KEY) {
+  //     setSummary(
+  //       "Error: Gemini API key not configured. Please set VITE_GEMINI_API_KEY in your environment variables."
+  //     );
+  //     return;
+  //   }
+
+  //   setIsSummarizing(true);
+  //   setSummary("Generating summary...");
+
+  //   const prompt =
+  //     "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
+  //     content;
+  //   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
+
+  //   try {
+  //     const response = await fetch(API_URL, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+  //     });
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(
+  //         errorData.error?.message || "Failed to generate summary."
+  //       );
+  //     }
+
+  //     const data = await response.json();
+  //     const summaryText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  //     setSummary(summaryText || "Could not extract summary from response.");
+  //   } catch (error) {
+  //     setSummary(`Error: ${error.message}`);
+  //   } finally {
+  //     setIsSummarizing(false);
+  //   }
+  // };
+
+  // REPLACE your old handleSummarize with this new one
+
+const handleSummarize = async () => {
+  if (!content.trim() || isSummarizing) return;
+
+  // We removed the API_KEY check, it's now handled on the server
+
+  setIsSummarizing(true);
+  setSummary("Generating summary...");
+
+  const prompt =
+    "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
+    content;
+
+  try {
+    // Call our new /api/summarize backend
+    const response = await fetch('/api/summarize', {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: prompt }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to generate summary.");
     }
 
-    setIsSummarizing(true);
-    setSummary("Generating summary...");
+    const summaryText = data.text;
+    setSummary(summaryText || "Could not extract summary from response.");
 
-    const prompt =
-      "Please provide a concise, easy-to-read summary of the following notes in a few key bullet points:\n\n---\n\n" +
-      content;
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.message || "Failed to generate summary."
-        );
-      }
-
-      const data = await response.json();
-      const summaryText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      setSummary(summaryText || "Could not extract summary from response.");
-    } catch (error) {
-      setSummary(`Error: ${error.message}`);
-    } finally {
-      setIsSummarizing(false);
-    }
-  };
-
+  } catch (error) {
+    setSummary(`Error: ${error.message}`);
+  } finally {
+    setIsSummarizing(false);
+  }
+};
   return (
     <div className="flex flex-col h-screen animate-fadeIn">
       <header className="flex-shrink-0 bg-gradient-to-r from-white/10 via-white/5 to-white/10 backdrop-blur-lg border-b border-white/20 z-50 sticky top-0 shadow-lg">
@@ -1937,41 +1974,73 @@ const AIAssistantPage = () => {
 
   useEffect(scrollToBottom, [messages]);
 
-  const callGeminiAPI = async (prompt) => {
-    if (!API_KEY) {
-      return "Error: API Key not configured.";
-    }
-    setIsLoading(true);
+  // const callGeminiAPI = async (prompt) => {
+  //   if (!API_KEY) {
+  //     return "Error: API Key not configured.";
+  //   }
+  //   setIsLoading(true);
 
-    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
-    const payload = {
-      contents: [{ parts: [{ text: prompt }] }],
-    };
+  //   const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${API_KEY}`;
+  //   const payload = {
+  //     contents: [{ parts: [{ text: prompt }] }],
+  //   };
 
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.message || `HTTP error! status: ${response.status}`
-        );
-      }
-      const data = await response.json();
-      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (!text) {
-        return "Sorry, I received an unexpected response.";
-      }
-      return text;
-    } catch (error) {
-      return `Sorry, there was an error: ${error.message}`;
-    } finally {
-      setIsLoading(false);
+  //   try {
+  //     const response = await fetch(API_URL, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(payload),
+  //     });
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(
+  //         errorData.error?.message || `HTTP error! status: ${response.status}`
+  //       );
+  //     }
+  //     const data = await response.json();
+  //     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  //     if (!text) {
+  //       return "Sorry, I received an unexpected response.";
+  //     }
+  //     return text;
+  //   } catch (error) {
+  //     return `Sorry, there was an error: ${error.message}`;
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // REPLACE your old callGeminiAPI with this new one
+
+const callGeminiAPI = async (prompt) => {
+  setIsLoading(true);
+
+  try {
+    // Call our OWN backend API at /api/chat
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt: prompt }), // Send the prompt in the body
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // This will show errors from our backend
+      throw new Error(data.error || 'Failed to get response from server.');
     }
-  };
+
+    return data.text || "Sorry, I received an empty response.";
+
+  } catch (error) {
+    // This will now show your backend's errors
+    return `Sorry, there was an error: ${error.message}`;
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
