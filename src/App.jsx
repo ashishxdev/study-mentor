@@ -1269,8 +1269,6 @@ const NoteEditorPage = ({ note, onExit }) => {
 const handleSummarize = async () => {
   if (!content.trim() || isSummarizing) return;
 
-  // We removed the API_KEY check, it's now handled on the server
-
   setIsSummarizing(true);
   setSummary("Generating summary...");
 
@@ -2141,25 +2139,34 @@ const callGeminiAPI = async (prompt) => {
               />
               <button
                 type="submit"
-                disabled={isLoading || !input.trim() || !API_KEY}
+                // disabled={isLoading || !input.trim() || !API_KEY}
+                disabled={isLoading || !input.trim()}
                 className="w-full sm:w-auto bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 rounded-xl hover:from-indigo-600 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg transform hover:scale-105 transition-all font-medium"
               >
                 Send
               </button>
             </div>
-            {!API_KEY && (
+            {/* {!API_KEY && (
               <p className="text-xs text-amber-300 mt-2">
                 AI Assistant is disabled for security. The Gemini API key should
                 not be exposed publicly in production.
               </p>
-            )}
+            )} */}
+            // REPLACE IT WITH THIS
+
+{!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY) && (
+  <p className="text-xs text-amber-300 mt-2">
+    AI Assistant is disabled. Backend services are not fully configured.
+  </p>
+)}
           </form>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4 sm:px-0">
           <button
             onClick={() => quickActionHandler("Give me study tips")}
             className="p-6 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-left disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={isLoading || !API_KEY}
+            // disabled={isLoading || !API_KEY}
+            disabled={isLoading}
           >
             <h3 className="font-semibold text-white mb-2">📚 Study Tips</h3>
             <p className="text-sm text-slate-300">
