@@ -1962,11 +1962,11 @@ const AIAssistantPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const chatEndRef = useRef(null);
 
-  const API_KEY = (
-    import.meta.env.VITE_GEMINI_API_KEY ||
-    import.meta.env.REACT_APP_GEMINI_API_KEY ||
-    ""
-  ).trim();
+  // const API_KEY = (
+  //   import.meta.env.VITE_GEMINI_API_KEY ||
+  //   import.meta.env.REACT_APP_GEMINI_API_KEY ||
+  //   ""
+  // ).trim();
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
