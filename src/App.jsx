@@ -1349,13 +1349,24 @@ const handleSummarize = async () => {
               className="flex items-center px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-indigo-500/30"
             >
               <AlignLeftIcon className="w-5 h-5 mr-2" />
-              <span className="hidden sm:inline">
+              {/* <span className="hidden sm:inline">
                 {isSummarizing
                   ? "Summarizing..."
                   : !API_KEY
                   ? "Summarize (API Key Required)"
                   : "Summarize"}
-              </span>
+              </span> */}
+              <button
+  onClick={handleSummarize}
+  disabled={!content.trim() || isSummarizing}
+  className="flex items-center px-4 py-2 rounded-xl bg-indigo-500/20 text-indigo-300 hover:text-white hover:bg-indigo-500/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all border border-indigo-500/30"
+>
+  <AlignLeftIcon className="w-5 h-5 mr-2" />
+  <span className="hidden sm:inline">
+    {isSummarizing ? "Summarizing..." : "Summarize"}
+  </span>
+  <span className="sm:hidden">{isSummarizing ? "..." : "AI"}</span>
+</button>
               <span className="sm:hidden">{isSummarizing ? "..." : "AI"}</span>
             </button>
             <div className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-white/5 border border-white/10">

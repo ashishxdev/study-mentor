@@ -48,6 +48,11 @@ export default async function handler(req, res) {
     res.status(200).json({ text });
 
   } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  const message =
+    error.message?.includes("overloaded")
+      ? "The AI model is busy right now. Please try again in a few seconds."
+      : error.message || "An unknown error occurred.";
+
+  res.status(500).json({ error: message });
+}
 }
