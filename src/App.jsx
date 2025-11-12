@@ -983,7 +983,6 @@ const HomePage = () => {
     const activities = JSON.parse(
       localStorage.getItem("studyActivities") || "{}"
     );
-    // --- Stats calculation logic ---
     const dates = Object.keys(activities).sort();
     let bestStreak = 0,
       tempStreak = 0,
@@ -1032,7 +1031,6 @@ const HomePage = () => {
     refreshData();
     const interval = setInterval(refreshData, 60000);
 
-    // Listen for activity updates
     const handleActivityUpdate = () => refreshData();
     window.addEventListener("activityUpdated", handleActivityUpdate);
 
@@ -1390,31 +1388,6 @@ const NotesPage = ({ onSelectNote }) => {
   const [notes, setNotes] = useState(mockFirestore.notes);
   const [newTitle, setNewTitle] = useState("");
 
-  // useEffect(() => {
-  //   const checkStorage = () => {
-  //     try {
-  //       const storedNotes = JSON.parse(
-  //         localStorage.getItem("studyNotes") || "[]"
-  //       );
-  //       if (
-  //         storedNotes.length !== notes.length ||
-  //         JSON.stringify(storedNotes) !== JSON.stringify(notes)
-  //       ) {
-  //         setNotes(storedNotes);
-  //         mockFirestore.notes = storedNotes;
-  //       }
-  //     } catch (error) {
-  //       console.error("Error reading notes from localStorage:", error);
-  //     }
-  //   };
-  //   const interval = setInterval(checkStorage, 2000);
-  //   window.addEventListener("focus", checkStorage);
-
-  //   return () => {
-  //     clearInterval(interval);
-  //     window.removeEventListener("focus", checkStorage);
-  //   };
-  // }, [notes]);
   useEffect(() => {
   const syncNotes = async () => {
     try {
@@ -1440,7 +1413,7 @@ const NotesPage = ({ onSelectNote }) => {
   window.addEventListener("focus", syncNotes);
   window.addEventListener("dataRefreshed", syncNotes);
 
-  const interval = setInterval(syncNotes, 30000);  // Changed from 10000 to 30000
+  const interval = setInterval(syncNotes, 30000);  
 
   return () => {
     clearInterval(interval);
@@ -2176,36 +2149,6 @@ const FlashcardsPage = ({ setMobileOpen }) => {
   const [revealed, setRevealed] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
 
-  // useEffect(() => {
-  //   const checkStorage = () => {
-  //     try {
-  //       const storedDecks = JSON.parse(
-  //         localStorage.getItem("flashcardDecks") || "[]"
-  //       );
-  //       if (JSON.stringify(storedDecks) !== JSON.stringify(decks)) {
-  //         setDecks(storedDecks);
-  //         mockFirestore.decks = storedDecks;
-  //         if (
-  //           selectedDeck &&
-  //           !storedDecks.some((d) => d.id === selectedDeck.id)
-  //         ) {
-  //           setSelectedDeck(null);
-  //           setViewMode("decks");
-  //         } else if (selectedDeck) {
-  //           setSelectedDeck(storedDecks.find((d) => d.id === selectedDeck.id));
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error reading decks from localStorage", error);
-  //     }
-  //   };
-  //   const interval = setInterval(checkStorage, 2000);
-  //   window.addEventListener("focus", checkStorage);
-  //   return () => {
-  //     clearInterval(interval);
-  //     window.removeEventListener("focus", checkStorage);
-  //   };
-  // }, [decks, selectedDeck]);
   useEffect(() => {
   const syncDecks = async () => {
     try {
@@ -2240,7 +2183,7 @@ const FlashcardsPage = ({ setMobileOpen }) => {
   window.addEventListener("focus", syncDecks);
   window.addEventListener("dataRefreshed", syncDecks);
 
-  const interval = setInterval(syncDecks, 30000);  // Changed from 10000 to 30000
+  const interval = setInterval(syncDecks, 30000); 
 
   return () => {
     clearInterval(interval);
@@ -2837,31 +2780,19 @@ const FlashcardsPage = ({ setMobileOpen }) => {
   );
 };
 
-// const Dashboard = ({ onSignOut }) => {
-//   const [currentPage, setCurrentPage] = useState(() => {
-//     return localStorage.getItem("studyMentorCurrentPage") || "home";
-//   });
-//   const [editingNote, setEditingNote] = useState(null);
-//   const [isMobileOpen, setMobileOpen] = useState(false);
-
-//   useEffect(() => {
-//     localStorage.setItem("studyMentorCurrentPage", currentPage);
-//   }, [currentPage]);
-
   const Dashboard = ({ onSignOut }) => {
   const [currentPage, setCurrentPage] = useState(() => {
     return localStorage.getItem("studyMentorCurrentPage") || "home";
   });
   const [editingNote, setEditingNote] = useState(null);
   const [isMobileOpen, setMobileOpen] = useState(false);
-  const [isSyncing, setIsSyncing] = useState(false);           // ADD THIS
-  const [lastSyncTime, setLastSyncTime] = useState(null);      // ADD THIS
+  const [isSyncing, setIsSyncing] = useState(false);        
+  const [lastSyncTime, setLastSyncTime] = useState(null);    
 
   useEffect(() => {
     localStorage.setItem("studyMentorCurrentPage", currentPage);
   }, [currentPage]);
 
-  // ADD THIS ENTIRE FUNCTION
   const handleManualSync = async () => {
     setIsSyncing(true);
     try {
@@ -2869,7 +2800,6 @@ const FlashcardsPage = ({ setMobileOpen }) => {
       if (user) {
         await performFullSync(user.id);
         
-        // Refresh local state
         mockFirestore.notes = JSON.parse(localStorage.getItem("studyNotes") || "[]");
         mockFirestore.tasks = JSON.parse(localStorage.getItem("studyTasks") || "[]");
         mockFirestore.decks = JSON.parse(localStorage.getItem("flashcardDecks") || "[]");
@@ -2878,7 +2808,6 @@ const FlashcardsPage = ({ setMobileOpen }) => {
         setLastSyncTime(new Date());
         window.dispatchEvent(new CustomEvent("dataRefreshed"));
         
-        console.log("✅ Manual sync completed");
       }
     } catch (error) {
       console.error("❌ Sync failed:", error);
@@ -2980,32 +2909,6 @@ const FlashcardsPage = ({ setMobileOpen }) => {
                 </h1>
               </div>
             </div>
-            {/* <div className="flex items-center">
-              <div className="bg-white/10 backdrop-blur-md px-2 py-1.5 sm:px-3 sm:py-2 lg:px-4 lg:py-2 rounded-lg sm:rounded-xl border border-white/20 shadow-lg">
-                <div className="flex items-center space-x-1 sm:space-x-2">
-                  <svg
-                    className="w-3 h-3 sm:w-4 sm:h-4 text-indigo-300 flex-shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                  <span className="text-xs sm:text-sm font-medium text-white whitespace-nowrap">
-                    <span className="hidden sm:inline">Today: </span>
-                    {new Date().toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-              </div>
-            </div> */}
             <div className="flex items-center space-x-2 sm:space-x-3">
   <button
     onClick={handleManualSync}
@@ -3073,7 +2976,6 @@ export default function App() {
     const handleAuthCallback = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        console.log("✅ Successful");
       }
     };
 
@@ -3082,66 +2984,12 @@ export default function App() {
     }
   }, []);
 
-//   useEffect(() => {
-//   const sub = onAuthChange(async (user) => {
-//     if (user) {
-//       setIsLoadingData(true);
-//       await loadDataFromSupabase(user.id);
-//       await syncLocalDataToSupabase(user.id);
-
-//       mockFirestore.notes = JSON.parse(
-//         localStorage.getItem("studyNotes") || "[]"
-//       );
-//       mockFirestore.tasks = JSON.parse(
-//         localStorage.getItem("studyTasks") || "[]"
-//       );
-//       mockFirestore.decks = JSON.parse(
-//         localStorage.getItem("flashcardDecks") || "[]"
-//       );
-//       mockFirestore.activities = JSON.parse(
-//         localStorage.getItem("studyActivities") || "{}"
-//       );
-
-//       setIsLoadingData(false);
-//       setIsLoggedIn(true);
-//     } else {
-//       setIsLoggedIn(false);
-//     }
-//   });
-
-//     (async () => {
-//   const user = await getCurrentUser();
-//   if (user) {
-//     setIsLoadingData(true);
-//     await loadDataFromSupabase(user.id);
-//     await syncLocalDataToSupabase(user.id);
-
-//     mockFirestore.notes = JSON.parse(
-//       localStorage.getItem("studyNotes") || "[]"
-//     );
-//     mockFirestore.tasks = JSON.parse(
-//       localStorage.getItem("studyTasks") || "[]"
-//     );
-//     mockFirestore.decks = JSON.parse(
-//       localStorage.getItem("flashcardDecks") || "[]"
-//     );
-//     mockFirestore.activities = JSON.parse(
-//       localStorage.getItem("studyActivities") || "{}"
-//     );
-
-//     setIsLoadingData(false);
-//     setIsLoggedIn(true);
-//   }
-// })();
-
-//     return () => sub?.data?.subscription?.unsubscribe?.();
-//   }, []);
 useEffect(() => {
   const sub = onAuthChange(async (user) => {
     if (user) {
       setIsLoadingData(true);
       try {
-        await performFullSync(user.id);  // CHANGED THIS LINE
+        await performFullSync(user.id);  
 
         mockFirestore.notes = JSON.parse(
           localStorage.getItem("studyNotes") || "[]"
@@ -3173,7 +3021,7 @@ useEffect(() => {
     if (user) {
       setIsLoadingData(true);
       try {
-        await performFullSync(user.id);  // CHANGED THIS LINE
+        await performFullSync(user.id);  
 
         mockFirestore.notes = JSON.parse(
           localStorage.getItem("studyNotes") || "[]"
