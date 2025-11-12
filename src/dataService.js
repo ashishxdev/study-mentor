@@ -284,20 +284,16 @@ function mergeActivities(localActivities, remoteActivities) {
 }
 
 export async function syncLocalDataToSupabase(userId) {
-    try {
-        console.log('🔄 Starting upload to Supabase...');
-        
+    try {        
         const localNotes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
         for (const note of localNotes) {
             await upsertNote(userId, note);
         }
-        console.log(`✅ Uploaded ${localNotes.length} notes`);
 
         const localTasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
         for (const task of localTasks) {
             await upsertTask(userId, task);
         }
-        console.log(`✅ Uploaded ${localTasks.length} tasks`);
 
         const localDecks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
         for (const deck of localDecks) {
@@ -319,7 +315,6 @@ export async function syncLocalDataToSupabase(userId) {
                 }
             }
         }
-        console.log(`✅ Uploaded ${localDecks.length} decks`);
 
         const localActivities = JSON.parse(localStorage.getItem('studyActivities') || '{}');
         for (const [date, activity] of Object.entries(localActivities)) {
@@ -329,9 +324,7 @@ export async function syncLocalDataToSupabase(userId) {
                 total: activity.total || 0
             });
         }
-        console.log(`✅ Uploaded ${Object.keys(localActivities).length} activity records`);
         
-        console.log('✅ Upload complete!');
         return true;
     } catch (error) {
         console.error('❌ Upload failed:', error);
@@ -341,7 +334,6 @@ export async function syncLocalDataToSupabase(userId) {
 
 export async function loadDataFromSupabase(userId) {
     try {
-        console.log('🔄 Starting download from Supabase...');
         
         const [notes, tasks, decks, activities] = await Promise.all([
             fetchNotes(userId),
@@ -357,8 +349,6 @@ export async function loadDataFromSupabase(userId) {
             })
         );
         
-        console.log(`📥 Downloaded: ${notes.length} notes, ${tasks.length} tasks, ${decksWithCards.length} decks`);
-
         const localNotes = JSON.parse(localStorage.getItem('studyNotes') || '[]');
         const localTasks = JSON.parse(localStorage.getItem('studyTasks') || '[]');
         const localDecks = JSON.parse(localStorage.getItem('flashcardDecks') || '[]');
@@ -373,9 +363,6 @@ export async function loadDataFromSupabase(userId) {
         localStorage.setItem('studyTasks', JSON.stringify(mergedTasks));
         localStorage.setItem('flashcardDecks', JSON.stringify(mergedDecks));
         localStorage.setItem('studyActivities', JSON.stringify(mergedActivities));
-
-        console.log('✅ Merge complete!');
-        console.log(`📦 Final counts: ${mergedNotes.length} notes, ${mergedTasks.length} tasks, ${mergedDecks.length} decks`);
         
         return true;
     } catch (error) {
@@ -386,12 +373,10 @@ export async function loadDataFromSupabase(userId) {
 
 export async function performFullSync(userId) {
     try {
-        console.log('🔄 Starting full bidirectional sync...');
         
         await syncLocalDataToSupabase(userId);
         await loadDataFromSupabase(userId);
         
-        console.log('✅ Full sync complete!');
         return true;
     } catch (error) {
         console.error('❌ Full sync failed:', error);
